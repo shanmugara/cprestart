@@ -1,0 +1,4 @@
+---
+# defaults file for cprestart
+kube_manifests_dir: /etc/kubernetes/manifests
+kube_manifests_backup_dir: /tmp/kubernetes/manifests

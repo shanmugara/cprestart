@@ -1,0 +1,17 @@
+---
+- name: Move etcd manifest into static_pods dir
+  copy:
+    remote_src: true
+    src: "{{ item }}"
+    dest: kube_manifests_dir
+  when: item is regex("etcd.yaml$")
+  loop: "{{ files_list_dict[inventory_hostname] }}"
+
+- name: Get etcd container ready status
+  shell:
+    cmd: crictl pods --name etcd-{{ inventory_hostname }} --state ready -q
+  register: result
+  until: "result is not failed"
+  retries: 10
+  delay: 5
+  changed_when: result.stdout_lines[0]

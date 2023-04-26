@@ -1,0 +1,27 @@
+---
+- name: Create manifests backup dir
+  file:
+    path: "{{ kube_manifests_backup_dir }}"
+    state: directory
+    mode: '0766'
+- name: Move files out of manifests dir
+  copy:
+    remote_src: true
+    src: "{{ item }}"
+    dest: "{{ kube_manifests_backup_dir }}"
+  loop: "{{ files_list_dict[ inventory_hostname ] }}"
+
+- name: Get infos on container
+  shell:
+    cmd: crictl pods --name etcd-{{ inventory_hostname }} --state ready -q
+  register: result
+  until: "result is not failed"
+  retries: 10
+  delay: 5
+  changed_when: result.stdout_lines[0]
+- name: Get JSON from container state
+  set_fact:
+    container_state: "{{ result.stdout_lines }}"
+- name: Debug print string
+  debug:
+    msg: "Containter state {{ container_state[0] }}"

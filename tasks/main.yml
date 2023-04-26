@@ -1,0 +1,8 @@
+---
+# tasks file for cprestart
+- name: Gather kubernetes manifests files
+  import_tasks: collect_manifests.yaml
+- name: Backup kubernetes manifests dir
+  import_tasks: move_files_out.yaml
+- name: Check etcd state after restart
+  import_tasks: etcd_restarts.yaml
