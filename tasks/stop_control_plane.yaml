@@ -16,7 +16,7 @@
       shell:
         cmd: sudo crictl pods --name ^{{ pod_name }}$ --state ready -q
       register: pod_id
-      changed_when: "result is not failed"
+      changed_when: "pod_id is not failed"
 
     - name: Stopping pod {{ pod_name }}
       file:
