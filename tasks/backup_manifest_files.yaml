@@ -21,4 +21,4 @@
 
 - name: Debug print pod results
   debug:
-    msg: {{ results }}
+    msg: "{{ results }}"
