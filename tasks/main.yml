@@ -4,5 +4,7 @@
   import_tasks: collect_manifests.yaml
 - name: Backup kubernetes manifests dir
   import_tasks: move_files_out.yaml
+- name: Stop kubernetes control plane pods
+  import_tasks: stop_control_plane.yaml
 - name: Check etcd state after restart
   import_tasks: etcd_restarts.yaml
