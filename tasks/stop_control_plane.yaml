@@ -3,7 +3,7 @@
   block:
     - name: Read manifest file
       shell:
-        cmd: "cat {{ item }"
+        cmd: "cat {{ item }}"
       register: manifest
 
     - name: Get static_pod name from manifest
