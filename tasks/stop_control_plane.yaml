@@ -20,7 +20,7 @@
 
     - name: Test deletion
       file:
-        path: "/etc/kubernetes/manifests/test.txt"
+        path: "/tmp/test.txt"
         state: absent
 
     - name: Stopping pod {{ pod_name }}
