@@ -10,3 +10,7 @@
     src: "{{ item }}"
     dest: "{{ kube_manifests_backup_dir }}"
   loop: "{{ files_list_dict[ inventory_hostname ] }}"
+- name: Debug loop 1
+  debug:
+    msg: Printing dir name "{{ item | dirname}}
+  loop: "{{ files_list_dict[ inventory_hostname ] }}"
