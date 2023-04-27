@@ -11,7 +11,7 @@
   register: manifests
 - name: Append files to files_list fact
   set_fact:
-          files_list_dict: "{{ files_list_dict | combine( { inventory_hostname: files_list_dict[inventory_hostname] + [item.path] }) }}"
+    files_list_dict: "{{ files_list_dict | combine( { inventory_hostname: files_list_dict[inventory_hostname] + [item.path] }) }}"
   loop: "{{ manifests.files }}"
   loop_control:
     label: "{{ item.path }}"

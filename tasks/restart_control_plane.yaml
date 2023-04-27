@@ -3,7 +3,7 @@
   block:
   - name: Get backup path for manifest file
       set_fact:
-        filepath: "{{ /tmp/kubernetes/manifests }}/{{ item | filename }}"
+        filepath: "{{ kube_manifests_backup_dir }}/{{ item | filename }}"
 
   - name: Copy manifest to destination
     copy:
