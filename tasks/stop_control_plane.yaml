@@ -12,9 +12,14 @@
       vars:
         manifest_yaml: "{{ manifest.stdout | from_yaml }}"
 
-    - name: Get ready status for pod {{ pod_name }}
+    - name: Stopping pod {{ pod_name }}
+      file:
+        path: "{{ item }}"
+        state: absent
+
+    - name: Get notready status for pod {{ pod_name }}
       shell:
-        cmd: sudo crictl pods --name ^{{ pod_name }}$ --state ready -q
+        cmd: sudo crictl pods --name ^{{ pod_name }}$ --state notready -q
       register: result
       until: "result is not failed"
       retries: 10
