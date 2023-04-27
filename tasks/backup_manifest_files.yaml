@@ -14,8 +14,16 @@
 #  debug:
 #    msg: Printing backup filepath "{{ kube_manifests_backup_dir }}/{{ item | basename }}
 #  loop: "{{ files_list_dict[ inventory_hostname ] }}"
-- name: Init stopped pods list
-  set_fact:
-    stopped_pods: []
-- name: Wait for the pod to stop
-  include_tasks: get_pod_stopped.yaml
+#- name: Get stopped pods
+#    shell:
+#      cmd: sudo crictl ps --state exited -q
+#    register: results
+#    until: results.stdout.find('6e3077f5bf834c2e748002969ebec568f4936104355ceef2524c51350ddee7f0abcd') != -1
+#    retries: 30
+#    delay: 5
+#  - name: Stopped pods list of ids
+#    set_fact:
+#      stopped_pods: "{{ results.stdout | split('\n') }}"
+#  - name: Debug print pod results
+#    debug:
+#      msg: "{{ stopped_pods }}"

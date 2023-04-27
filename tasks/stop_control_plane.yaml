@@ -23,11 +23,25 @@
         path: "{{ item }}"
         state: absent
 
-    - name: Get notready status for pod {{ pod_name }}
-      shell:
-        cmd: sudo crictl ps --ps ^{{ pod_id }}$ --state notready -q
-      register: result
-      until: "result is not failed"
-      retries: 30
-      delay: 5
-      changed_when: result.stdout_lines[0]
+    - name: Wait for the pod {{ pod_name }} to stop
+        shell:
+          cmd: sudo crictl ps --state exited -q
+        register: results
+        until: results.stdout.find({{ pod_id }}) != -1
+        retries: 30
+        delay: 5
+#          - name: Stopped pods list of ids
+#            set_fact:
+#              stopped_pods: "{{ results.stdout | split('\n') }}"
+#          - name: Debug print pod results
+#            debug:
+#              msg: "{{ stopped_pods }}"
+#
+#    - name: Get notready status for pod {{ pod_name }}
+#      shell:
+#        cmd: sudo crictl ps --ps ^{{ pod_id }}$ --state notready -q
+#      register: result
+#      until: "result is not failed"
+#      retries: 30
+#      delay: 5
+#      changed_when: result.stdout_lines[0]
