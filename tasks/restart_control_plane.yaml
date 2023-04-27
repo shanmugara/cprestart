@@ -1,0 +1,32 @@
+---
+- name: Restart control plane pods
+  block:
+  - name: Get backup path for manifest file
+      set_fact:
+        filepath: "{{ /tmp/kubernetes/manifests }}/{{ item | filename }}"
+
+  - name: Copy manifest to destination
+    copy:
+      remote_source: true
+      src: filepath
+      dest: "{{ item | dirname }}"
+
+  - name: Read manifest file
+      shell:
+        cmd: "cat {{ filepath }}"
+      register: manifest
+
+  - name: Get static_pod name from manifest
+    set_fact:
+      pod_name: "{{ manifest_yaml.metadata.name }}-{{ inventory_hostname }}"
+    vars:
+      manifest_yaml: "{{ manifest.stdout | from_yaml }}"
+
+  - name: Get ready state for pod {{ pod_name }}
+    shell:
+      cmd: sudo crictl pods --name ^{{ pod_name }}$ --state ready -q
+    register: result
+    until: "result is not failed"
+    retries: 10
+    delay: 5
+    changed_when: result.stdout_lines[0]
