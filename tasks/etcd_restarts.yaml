@@ -15,3 +15,8 @@
   retries: 10
   delay: 5
   changed_when: result.stdout_lines[0]
+
+- name: Set etcd_restarted fact
+  set_fact:
+      etcd_restarted: true
+  when: "result is not failed"
