@@ -32,7 +32,7 @@
       shell:
         cmd: sudo crictl ps --state exited -q
       register: results
-      until: results.stdout.find({{ pod_id }}) != -1
+      until: results.stdout.find(pod_id) != -1
       retries: 30
       delay: 5
 #          - name: Stopped pods list of ids
