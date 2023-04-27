@@ -12,5 +12,5 @@
   loop: "{{ files_list_dict[ inventory_hostname ] }}"
 - name: Debug loop 1
   debug:
-    msg: Printing dir name "{{ item | dirname}}
+    msg: Printing dir name "{{ item | filename}}
   loop: "{{ files_list_dict[ inventory_hostname ] }}"
