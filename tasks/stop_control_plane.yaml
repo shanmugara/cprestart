@@ -20,6 +20,3 @@
       retries: 10
       delay: 5
       changed_when: result.stdout_lines[0]
-
-  loop: "{{ files_list_dict }}"
-  when: item is not regex("etcd.yaml$")

@@ -1,0 +1,5 @@
+---
+- name: Stop control plane main loop
+  include_tasks: stop_control_plane.yaml
+  loop: "{{ files_list_dict }}"
+  when: item is not regex("etcd.yaml$")
