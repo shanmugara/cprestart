@@ -10,7 +10,7 @@
       set_fact:
         pod_name: "{{ manifest_yaml.metadata.name }}-{{ inventory_hostname }}"
       vars:
-        manifest_yaml: "{{ manifest | from_yaml }}"
+        manifest_yaml: "{{ manifest.stdout | from_yaml }}"
 
     - name: Get pod ready status
       shell:
