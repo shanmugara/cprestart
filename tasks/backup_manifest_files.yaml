@@ -20,7 +20,7 @@
   register: results
 - name: Stopped pods list if ids
   set_fact:
-    stopped_pods: "{{ results.stdout | split('/n') }}"
+    stopped_pods: "{{ results.stdout | split('\n') }}"
 
 
 - name: Debug print pod results
