@@ -5,10 +5,13 @@
     shell:
       cmd: sudo crictl ps --state exited -q
     register: results
+    until: results.stdout.find('6e3077f5bf834c2e748002969ebec568f4936104355ceef2524c51350ddee7f0') != 1
+    retries: 30
+    delay: 5
   - name: Stopped pods list of ids
     set_fact:
       stopped_pods: "{{ results.stdout | split('\n') }}"
   - name: Debug print pod results
     debug:
       msg: "{{ stopped_pods }}"
-  when: "{{ stopped_pods not contains('6e3077f5bf834c2e748002969ebec568f4936104355ceef2524c51350ddee7f0') }}"
+  
