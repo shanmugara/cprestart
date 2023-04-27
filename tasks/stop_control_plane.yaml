@@ -12,7 +12,7 @@
       vars:
         manifest_yaml: "{{ manifest.stdout | from_yaml }}"
 
-    - name: Get pod ready status - "{{ pod_name }}"
+    - name: Get ready status for pod {{ pod_name }}
       shell:
         cmd: sudo crictl pods --name ^{{ pod_name }}$ --state ready -q
       register: result
