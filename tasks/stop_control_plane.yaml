@@ -1,0 +1,25 @@
+---
+- name: Stop kubernetes api and manager pods
+  block:
+    - name: Read manifest file
+      shell:
+        cmd: "cat {{ item }"
+      register: manifest
+
+    - name: Get static_pod name from manifest
+      set_fact:
+        pod_name: "{{ manifest_yaml.metadata.name }}-{{ inventory_hostname }}"
+      vars:
+        manifest_yaml: "{{ manifest | from_yaml }}"
+
+    - name: Get pod ready status
+      shell:
+        cmd: sudo crictl pods --name ^{{ pod_name }}$ --state ready -q
+      register: result
+      until: "result is not failed"
+      retries: 10
+      delay: 5
+      changed_when: result.stdout_lines[0]
+
+  loop: "{{ files_list_dict }}"
+  when: item is not regex("etcd.yaml$")
