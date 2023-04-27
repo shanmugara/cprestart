@@ -1,0 +1,16 @@
+---
+- name: Get all stopped pod ids
+  block:
+
+  - name: Get stopped pods
+    shell:
+      cmd: sudo crictl ps --state exited -q
+    register: results
+
+  - name: Stopped pods list of ids
+    set_fact:
+      stopped_pods: "{{ results.stdout | split('\n') }}"
+
+  - name: Debug print pod results
+    debug:
+      msg: "{{ stopped_pods }}"
