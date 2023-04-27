@@ -14,3 +14,11 @@
 #  debug:
 #    msg: Printing backup filepath "{{ kube_manifests_backup_dir }}/{{ item | basename }}
 #  loop: "{{ files_list_dict[ inventory_hostname ] }}"
+- name: Debug get stopped pod
+  shell:
+    cmd: sudo crictl ps --state exited
+  register: results
+
+- name: Debug print pod results
+  debug:
+    msg: {{ results }}

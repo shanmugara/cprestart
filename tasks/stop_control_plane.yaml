@@ -12,6 +12,12 @@
       vars:
         manifest_yaml: "{{ manifest.stdout | from_yaml }}"
 
+    - name: Get pod id for {{ pod_name }}
+      shell:
+        cmd: sudo crictl pods --name ^{{ pod_name }}$ --state ready -q
+      register: pod_id
+      changed_when: "result is not failed"
+
     - name: Stopping pod {{ pod_name }}
       file:
         path: "{{ item }}"
@@ -19,7 +25,7 @@
 
     - name: Get notready status for pod {{ pod_name }}
       shell:
-        cmd: sudo crictl pods --name ^{{ pod_name }}$ --state notready -q
+        cmd: sudo crictl ps --ps ^{{ pod_id }}$ --state notready -q
       register: result
       until: "result is not failed"
       retries: 30
