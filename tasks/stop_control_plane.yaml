@@ -18,6 +18,11 @@
       register: pod_id
       changed_when: "pod_id is not failed"
 
+    - name: Test deletion
+      file:
+        path: "/etc/kubernetes/manifests/test.txt"
+        state: absent
+
     - name: Stopping pod {{ pod_name }}
       file:
         path: "{{ item }}"
