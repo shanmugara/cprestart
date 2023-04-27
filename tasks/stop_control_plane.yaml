@@ -24,12 +24,12 @@
         state: absent
 
     - name: Wait for the pod {{ pod_name }} to stop
-        shell:
-          cmd: sudo crictl ps --state exited -q
-        register: results
-        until: results.stdout.find({{ pod_id }}) != -1
-        retries: 30
-        delay: 5
+      shell:
+        cmd: sudo crictl ps --state exited -q
+      register: results
+      until: results.stdout.find({{ pod_id }}) != -1
+      retries: 30
+      delay: 5
 #          - name: Stopped pods list of ids
 #            set_fact:
 #              stopped_pods: "{{ results.stdout | split('\n') }}"
