@@ -27,6 +27,6 @@
       cmd: sudo crictl pods --name ^{{ pod_name }}$ --state ready -q
     register: result
     until: "result is not failed"
-    retries: 10
+    retries: 30
     delay: 5
     changed_when: result.stdout_lines[0]
