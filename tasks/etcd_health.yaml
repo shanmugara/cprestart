@@ -20,6 +20,7 @@
     - name: Restart phase - set etcd health fact
       set_fact:
         etcd_healthy: true
+        cacheable: yes
   when: (etcd_healthy is undefined) or (etcd_healthy == false)
 
 #
