@@ -1,6 +1,29 @@
 ---
-- name: Debug etcd file pattern match
-  set_fact:
-    etcd_file_name: "{{ item }}"
-  when: item is regex('/etcd.yaml$')
-  loop: "{{ files_list_dict[inventory_hostname] }}"
+#- name: Debug etcd file pattern match
+#  tags: debug
+#  set_fact:
+#    etcd_file_name: "{{ item }}"
+#  when: item is regex('/etcd.yaml$')
+#  loop: "{{ files_list_dict[inventory_hostname] }}"
+
+- name: Restart phase - check etcd health again
+  tags: etcdhealth
+  shell:
+    cmd: /usr/local/bin/etcdctl.sh endpoint health -w json
+  register: etcd_h_json
+
+- name: Debug print 1
+  tags: debug
+  debug:
+    msg: print 1 "{{ etcd_h_json }}"
+
+- name: debug print 2
+  tags: debug
+  debug:
+    msg: print 2 "{{ etcd_h_json.stdout_lines }}"
+
+
+- name: debug print 3
+  tags: debug
+  debug:
+    msg: print 2 "{{ etcd_h_json.stdout_lines[0] }}"

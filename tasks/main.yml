@@ -27,3 +27,7 @@
 - name: Debug etcd health
   import_tasks: etcd_health.yaml
   tags: [etcdhealth]
+
+- name: Debug task
+  import_tasks: debug_only.yaml
+  tags: [debug]
