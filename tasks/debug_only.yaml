@@ -28,11 +28,19 @@
   debug:
     msg: print 2 "{{ etcd_h_json.stdout_lines[0] | from_json }}"
 
-- name: Restart phase - check etcd health again
+- name: Debug etcd restart block
   tags: debug
-  shell:
-    cmd: /usr/local/bin/etcdctl.sh endpoint health -w json
-  register: etcd_h_json
-  until: etcd_h_json.stdout_lines[0] | from_json | selectattr('health','equalto', false) | list | count == 1
-  retries: 5
-  delay: 5
+  block:
+    - name: Restart phase - check etcd health again
+      tags: debug
+      shell:
+        cmd: /usr/local/bin/etcdctl.sh endpoint health -w json
+      register: etcd_h_json
+      until: etcd_h_json.stdout_lines[0] | from_json | selectattr('health','equalto', false) | list | count == 1
+      retries: 5
+      delay: 5
+  rescue:
+    - name: Print etcd health
+      debug:
+        msg: etcd "{{ item }}"
+      loop: "{{ etcd_h_json.stdout_lines[0] }}"
