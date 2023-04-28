@@ -20,14 +20,10 @@
   import_tasks: etcd_start.yaml
   tags: [startetcd]
 
-- name: Restart kubernetes control plane pods
-  import_tasks: restart_control_plane_loop.yaml
-  tags: [startcp]
-
 - name: Debug etcd health
   import_tasks: etcd_health.yaml
   tags: [etcdhealth]
 
-- name: Debug task
-  import_tasks: debug_only.yaml
-  tags: [debug]
+- name: Restart kubernetes control plane pods
+  import_tasks: restart_control_plane_loop.yaml
+  tags: [startcp]
