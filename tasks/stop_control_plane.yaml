@@ -31,6 +31,13 @@
     - name: Debug print
       debug:
         msg: pod_id {{ pod_id.stdout_lines[0] }}
+    - name: Debug cmd
+      shell:
+        cmd: sudo crictl ps --state running -p {{ pod_id.stdout_lines[0] }} --no-trunc
+      register: results
+    - name: Debug print 2
+      debug:
+        cmd: {{ results }}
 
     - name: Wait for the pod {{ pod_name }} to stop
       shell:
