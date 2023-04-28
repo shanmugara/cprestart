@@ -7,7 +7,7 @@
 #  loop: "{{ files_list_dict[inventory_hostname] }}"
 
 - name: Restart phase - check etcd health again
-  tags: etcdhealth
+  tags: debug
   shell:
     cmd: /usr/local/bin/etcdctl.sh endpoint health -w json
   register: etcd_h_json
