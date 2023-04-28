@@ -1,14 +1,23 @@
 ---
-- name: Restart phase - etcd health block
+- name: Restart phase - check etcd health again
   tags: etcdhealth
-  block:
-  - name: Restart phase - getting etcd cluster health
-    shell:
-      cmd: /usr/local/bin/etcdctl.sh endpoint health -w json
-    register: etcd_h_json
-
-  - name: Restart phase - verifying etcd cluster health by node
-    debug:
-      msg: "{{ item }}"
-    failed_when: item.health != true
-    loop: "{{ etcd_h_json.stdout_lines[0] }}"
+  shell:
+    cmd: /usr/local/bin/etcdctl.sh endpoint health -w json
+  register: etcd_h_json
+  failed_when: etcd_h_json.stdout_lines[0] | selectattr(search_key,'health', false) | list | count > 0
+  retries: 30
+  delay: 5
+#
+#- name: Restart phase - etcd health block
+#  tags: etcdhealth
+#  block:
+#  - name: Restart phase - getting etcd cluster health
+#    shell:
+#      cmd: /usr/local/bin/etcdctl.sh endpoint health -w json
+#    register: etcd_h_json
+#
+#  - name: Restart phase - verifying etcd cluster health by node
+#    debug:
+#      msg: "{{ item }}"
+#    failed_when: item.health != true
+#    loop: "{{ etcd_h_json.stdout_lines[0] }}"
