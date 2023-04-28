@@ -6,7 +6,7 @@
   copy:
     remote_src: true
     src: "{{ kube_manifests_backup_dir }}/{{ etcd_manifest | basename }}"
-    dest: kube_manifests_dir
+    dest: "{{ kube_manifests_dir }}"
 #   when: item is regex("etcd.yaml$")
 #   loop: "{{ files_list_dict[inventory_hostname] }}"
 
