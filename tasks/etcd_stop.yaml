@@ -5,7 +5,7 @@
   when: item is regex("etcd.yaml$")
   loop: "{{ files_list_dict[inventory_hostname] }}"
 
-- name: Read manifest file {{ item }}
+- name: Read manifest file {{ etcd_manifest }}
   shell:
     cmd: "cat {{ etcd_manifest }}"
   register: manifest
@@ -13,8 +13,8 @@
 - name: Get static_pod name from manifest file
   set_fact:
     etcd_pod_name: "{{ manifest_yaml.metadata.name }}-{{ inventory_hostname }}"
-    vars:
-      manifest_yaml: "{{ manifest.stdout | from_yaml }}"
+  vars:
+    manifest_yaml: "{{ manifest.stdout | from_yaml }}"
 
 - name: Fetch pod id for {{ etcd_pod_name }}
   shell:
