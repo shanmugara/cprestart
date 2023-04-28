@@ -17,6 +17,10 @@
       loop: "{{ etcd_h_json.stdout_lines[0] }}"
       loop_control:
         label: "{{ item.endpoint }}"
+    - name: Restart phase - set etcd health fact
+      set_fact:
+        etcd_healthy: true
+  when: (etcd_healthy is undefined) or (etcd_healthy == false)
 
 #
 #- name: Restart phase - etcd health block
