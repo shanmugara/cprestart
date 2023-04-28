@@ -1,67 +1,32 @@
 ---
 - name: Stop kubernetes api and manager pods
   block:
-    - name: Read manifest file
+    - name: Read manifest file {{ item }}
       shell:
         cmd: "cat {{ item }}"
       register: manifest
 
-    - name: Get static_pod name from manifest
+    - name: Get static_pod name from manifest file
       set_fact:
         pod_name: "{{ manifest_yaml.metadata.name }}-{{ inventory_hostname }}"
       vars:
         manifest_yaml: "{{ manifest.stdout | from_yaml }}"
 
-    - name: Get pod id for {{ pod_name }}
+    - name: Fetch pod id for {{ pod_name }}
       shell:
         cmd: sudo crictl pods --name ^{{ pod_name }}$ --state ready -q
       register: pod_id
       changed_when: "pod_id is not failed"
 
-    - name: Test deletion
-      file:
-        path: "/tmp/test.txt"
-        state: absent
-
-    - name: Stopping pod {{ pod_name }}
+    - name: Remove pod {{ pod_name }} from static_pod path
       file:
         path: "{{ item }}"
         state: absent
 
-    - name: Debug print
-      debug:
-        msg: pod_id {{ pod_id.stdout_lines[0] }}
-    - name: Debug cmd
-      shell:
-        cmd: sudo crictl ps --state running -p {{ pod_id.stdout_lines[0] }} --no-trunc
-      register: results
-    - name: Debug print 2
-      debug:
-        msg: Results {{ results }}
-
-    - name: Wait for the pod {{ pod_name }} to stop
+    - name: Waiting for pod {{ pod_name }} to stop
       shell:
         cmd: sudo crictl ps --state running -p {{ pod_id.stdout_lines[0] }} --no-trunc
       register: results
       until: results.stdout.find(pod_id.stdout_lines[0][:13]) == -1
       retries: 30
       delay: 5
-    - name: Pausing
-      pause:
-        prompt: Confirm pod is stopped
-
-#          - name: Stopped pods list of ids
-#            set_fact:
-#              stopped_pods: "{{ results.stdout | split('\n') }}"
-#          - name: Debug print pod results
-#            debug:
-#              msg: "{{ stopped_pods }}"
-#
-#    - name: Get notready status for pod {{ pod_name }}
-#      shell:
-#        cmd: sudo crictl ps --ps ^{{ pod_id }}$ --state notready -q
-#      register: result
-#      until: "result is not failed"
-#      retries: 30
-#      delay: 5
-#      changed_when: result.stdout_lines[0]
