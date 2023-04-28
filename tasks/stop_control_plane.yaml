@@ -37,7 +37,7 @@
       register: results
     - name: Debug print 2
       debug:
-        msg: {{ results }}
+        msg: Results {{ results }}
 
     - name: Wait for the pod {{ pod_name }} to stop
       shell:
