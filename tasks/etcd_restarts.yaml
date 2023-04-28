@@ -1,4 +1,7 @@
 ---
+- name: Debug print etcd path
+  debug:
+    msg: etcd path "{{ kube_manifests_backup_dir }}/{{ etcd_manifest | basename }}"
 - name: Copy etcd manifest into static_pods dir
   copy:
     remote_src: true
