@@ -4,9 +4,7 @@
   block:
   - name: Stop phase - getting etcd manifest file path
     set_fact:
-      etcd_manifest: "{{ item }}"
-    when: item is regex("/etcd.yaml$")
-    loop: "{{ files_list_dict[inventory_hostname] }}"
+       etcd_manifest: "{{ kube_manifests_dir }}/etcd.yaml"
 
   - name: Stop phase - reading manifest file {{ etcd_manifest }}
     shell:

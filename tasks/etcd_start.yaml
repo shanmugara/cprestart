@@ -8,8 +8,24 @@
   - name: Restart phase - restoring etcd manifest to {{ kube_manifests_dir }}
     copy:
       remote_src: true
-      src: "{{ kube_manifests_backup_dir }}/{{ etcd_manifest | basename }}"
+      src: "{{ kube_manifests_backup_dir }}/etcd.yaml"
       dest: "{{ kube_manifests_dir }}"
+
+  - name: Restart phase - getting etcd manifest file path
+    set_fact:
+      etcd_manifest: "{{ kube_manifests_dir }}/etcd.yaml"
+
+  - name: Restart phase - reading manifest file {{ etcd_manifest }}
+    shell:
+      cmd: "cat {{ etcd_manifest }}"
+    register: manifest
+
+  - name: Restart phase - getting static_pod name from manifest file {{ etcd_manifest }}
+    set_fact:
+      etcd_pod_name: "{{ manifest_yaml.metadata.name }}-{{ inventory_hostname }}"
+    vars:
+      manifest_yaml: "{{ manifest.stdout | from_yaml }}"
+
 
   - name: Restart phase - getting pod ready status for {{ etcd_pod_name }}
     shell:
@@ -19,8 +35,3 @@
     retries: 10
     delay: 5
     changed_when: result.stdout_lines[0]
-
-  - name: Restart phase - setting etcd_restarted fact
-    set_fact:
-        etcd_restarted: true
-    when: "result is not failed"

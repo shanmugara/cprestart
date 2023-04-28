@@ -10,9 +10,19 @@
     set_fact:
       files_list_dict: "{{ files_list_dict | combine( { inventory_hostname: [] } ) }}"
 
+  - name: Initialize phase - setting source manifests path
+    set_fact:
+      manifest_src_dir: "{{ kube_manifests_dir }}"
+    when: (backup is defined) and (backup | bool)
+
+  - name: Initialize phase - setting source manifests path
+    set_fact:
+      manifest_src_dir: "{{ kube_manifests_backup_dir }}"
+    when: (startcp is defined) and (startcp | bool)
+
   - name: Initialize phase - collect kubernetes static manifests files
     find:
-      path: "{{ kube_manifests_dir }}"
+      path: "{{ manifest_src_dir }}"
     register: manifests
 
   - name: Initialize phase - append files to files_list fact
