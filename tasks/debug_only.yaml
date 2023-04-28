@@ -26,4 +26,4 @@
 - name: debug print 3
   tags: debug
   debug:
-    msg: print 2 "{{ etcd_h_json.stdout_lines[0] }}"
+    msg: print 2 "{{ etcd_h_json.stdout_lines[0] | from_json }}"
