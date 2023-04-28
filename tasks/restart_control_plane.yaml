@@ -7,7 +7,7 @@
 
   - name: Copy manifest to static pods path
     copy:
-      remote_source: true
+      remote_src: true
       src: "{{ backup_filepath }}"
       dest: "{{ kube_manifests_dir }}"
 
