@@ -2,4 +2,4 @@
 - name: Stop control plane main loop
   include_tasks: stop_control_plane.yaml
   loop: "{{ files_list_dict[inventory_hostname] }}"
-  when: item is not regex("etcd.yaml$")
+  when: item is not regex("/etcd.yaml$")
