@@ -1,0 +1,5 @@
+---
+- name: Debug etcd file pattern match
+  set_fact:
+    etcd_file_name: {{ item }}
+  when: item | basename is regex('^etcd.yaml$)
