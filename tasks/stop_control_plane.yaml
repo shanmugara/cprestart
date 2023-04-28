@@ -39,6 +39,10 @@
       until: results.stdout.find(pod_id.stdout_lines[0]) == -1
       retries: 30
       delay: 5
+    - name: Pausing
+      pause:
+        prompt: Confirm pod is stopped
+
 #          - name: Stopped pods list of ids
 #            set_fact:
 #              stopped_pods: "{{ results.stdout | split('\n') }}"
