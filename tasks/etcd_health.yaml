@@ -1,0 +1,10 @@
+---
+- name: Restart pshase - getting etcd cluster health
+  shell:
+    cmd: /usr/local/bin/etcdctl.sh endpoint health -w json
+  register: etcd_h_json
+
+- name: Restart phase - verifying etcd cluster health by node
+  debug:
+    msg: "{{ item['health'] }}"
+  loop: "{{ etcd_h_json.stdout_lines }}"
