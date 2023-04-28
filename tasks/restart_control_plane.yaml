@@ -2,8 +2,8 @@
 - name: Restart control plane pods
   block:
   - name: Get backup path for manifest file
-      set_fact:
-        backup_filepath: "{{ kube_manifests_backup_dir }}/{{ item | basename }}"
+    set_fact:
+      backup_filepath: "{{ kube_manifests_backup_dir }}/{{ item | basename }}"
 
   - name: Copy manifest to static pods path
     copy:
@@ -12,9 +12,9 @@
       dest: "{{ kube_manifests_dir }}"
 
   - name: Read manifest file
-      shell:
-        cmd: "cat {{ backup_filepath }}"
-      register: manifest
+    shell:
+      cmd: "cat {{ backup_filepath }}"
+    register: manifest
 
   - name: Get static_pod name from manifest
     set_fact:
