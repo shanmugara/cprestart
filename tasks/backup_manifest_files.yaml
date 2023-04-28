@@ -1,10 +1,10 @@
 ---
-- name: Create manifests backup dir
+- name: Backup phase - creating manifests backup dir
   file:
     path: "{{ kube_manifests_backup_dir }}"
     state: directory
     mode: '0766'
-- name: Move files out of manifests dir
+- name: Backup phase - backup manifests files to {{ kube_manifests_backup_dir }}
   copy:
     remote_src: true
     src: "{{ item }}"

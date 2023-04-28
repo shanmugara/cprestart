@@ -1,29 +1,29 @@
 ---
-- name: Stop kubernetes api and manager pods
+- name: Stop phase - stop kubernetes api and manager pods block
   block:
-    - name: Read manifest file {{ item }}
+    - name: Stop phase - reading manifest file {{ item }}
       shell:
         cmd: "cat {{ item }}"
       register: manifest
 
-    - name: Get static_pod name from manifest file
+    - name: Stop phase - getting static_pod name from manifest file
       set_fact:
         pod_name: "{{ manifest_yaml.metadata.name }}-{{ inventory_hostname }}"
       vars:
         manifest_yaml: "{{ manifest.stdout | from_yaml }}"
 
-    - name: Fetch pod id for {{ pod_name }}
+    - name: Stop phase - fetching pod id for {{ pod_name }}
       shell:
         cmd: sudo crictl pods --name ^{{ pod_name }}$ --state ready -q
       register: pod_id
       changed_when: "pod_id is not failed"
 
-    - name: Remove pod {{ pod_name }} from static_pod path
+    - name: Stop phase - removing pod {{ pod_name }} from static_pod path {{ item | dirname }}
       file:
         path: "{{ item }}"
         state: absent
 
-    - name: Waiting for pod {{ pod_name }} to stop
+    - name: Stop phase - waiting for pod {{ pod_name }} to stop
       shell:
         cmd: sudo crictl ps --state running -p {{ pod_id.stdout_lines[0] }} --no-trunc
       register: results

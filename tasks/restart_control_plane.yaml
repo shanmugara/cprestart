@@ -1,28 +1,28 @@
 ---
-- name: Restart control plane pods
+- name: Restart phase - Restart control plane pods block
   block:
-  - name: Get backup path for manifest file
+  - name: Restart phase - getting backup path for {{ item | basename }}
     set_fact:
       backup_filepath: "{{ kube_manifests_backup_dir }}/{{ item | basename }}"
 
-  - name: Copy manifest to static pods path
+  - name: Restart phase - restoring {{ item | basename }} to {{ kube_manifests_dir }}
     copy:
       remote_src: true
       src: "{{ backup_filepath }}"
       dest: "{{ kube_manifests_dir }}"
 
-  - name: Read manifest file
+  - name: Restart phase - reading manifest file {{ item }}
     shell:
-      cmd: "cat {{ backup_filepath }}"
+      cmd: "cat {{ item }}"
     register: manifest
 
-  - name: Get static_pod name from manifest
+  - name: Restart phase - getting static_pod name from manifest {{ item | basename }}
     set_fact:
       pod_name: "{{ manifest_yaml.metadata.name }}-{{ inventory_hostname }}"
     vars:
       manifest_yaml: "{{ manifest.stdout | from_yaml }}"
 
-  - name: Get the ready state for pod {{ pod_name }}
+  - name: Restart phase - getting the ready state for pod {{ pod_name }}
     shell:
       cmd: sudo crictl pods --name ^{{ pod_name }}$ --state ready -q
     register: result

@@ -1,21 +1,21 @@
 ---
-- name: Initialize facts for files_list_dict
+- name: Initialize phase - set facts for files_list_dict
   set_fact:
     files_list_dict: {}
-- name: Initialize fact for host files_list
+- name: Initialize phase - set fact for host files_list
   set_fact:
     files_list_dict: "{{ files_list_dict | combine( { inventory_hostname: [] } ) }}"
-- name: Collect kubernetes static manifests files
+- name: Initialize phase - collect kubernetes static manifests files
   find:
     path: "{{ kube_manifests_dir }}"
   register: manifests
-- name: Append files to files_list fact
+- name: Initialize phase - append files to files_list fact
   set_fact:
     files_list_dict: "{{ files_list_dict | combine( { inventory_hostname: files_list_dict[inventory_hostname] + [item.path] }) }}"
   loop: "{{ manifests.files }}"
   loop_control:
     label: "{{ item.path }}"
-
-- name: Debug print
-  debug:
-    msg: Debug print {{ files_list_dict[inventory_hostname] }}
+#
+#- name: Initialize phase - Debug print
+#  debug:
+#    msg: Debug print {{ files_list_dict[inventory_hostname] }}

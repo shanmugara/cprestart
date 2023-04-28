@@ -1,14 +1,14 @@
 ---
-- name: Debug print etcd path
-  debug:
-    msg: etcd path "{{ kube_manifests_backup_dir }}/{{ etcd_manifest | basename }}"
-- name: Copy etcd manifest into static_pods dir
+#- name: Debug print etcd path
+#  debug:
+#    msg: etcd path "{{ kube_manifests_backup_dir }}/{{ etcd_manifest | basename }}"
+- name: Restart phase - restoring etcd manifest to {{ kube_manifests_dir }}
   copy:
     remote_src: true
     src: "{{ kube_manifests_backup_dir }}/{{ etcd_manifest | basename }}"
     dest: "{{ kube_manifests_dir }}"
 
-- name: Get pod ready status {{ etcd_pod_name }}
+- name: Restart phase - getting pod ready status for {{ etcd_pod_name }}
   shell:
     cmd: sudo crictl pods --name ^{{ etcd_pod_name }}$ --state ready -q
   register: result
@@ -17,7 +17,7 @@
   delay: 5
   changed_when: result.stdout_lines[0]
 
-- name: Set etcd_restarted fact
+- name: Restart phase - setting etcd_restarted fact
   set_fact:
       etcd_restarted: true
   when: "result is not failed"
