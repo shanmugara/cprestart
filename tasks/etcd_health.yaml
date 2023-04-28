@@ -10,8 +10,8 @@
       until: etcd_h_json.stdout_lines[0] | from_json | selectattr('health','equalto', false) | list | count == 0
       retries: 30
       delay: 5
-  rescue:
-    - name: Restart phsae - etcd health check has FAILED
+  always:
+    - name: Restart phase - etcd health check status
       debug:
         msg: etcd health "{{ item }}"
       loop: "{{ etcd_h_json.stdout_lines[0] }}"
