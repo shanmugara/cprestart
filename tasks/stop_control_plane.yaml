@@ -28,6 +28,15 @@
         path: "{{ item }}"
         state: absent
 
+   - name: Debug register
+     shell:
+       cmd: sudo crictl ps --state exited -q
+     register: results
+
+   - name: Debug print
+     debug:
+       msg: Results {{ results.stdout }}
+
     - name: Wait for the pod {{ pod_name }} to stop
       shell:
         cmd: sudo crictl ps --state exited -q
