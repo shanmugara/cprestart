@@ -43,7 +43,7 @@
       shell:
         cmd: sudo crictl ps --state running -p {{ pod_id.stdout_lines[0] }} --no-trunc
       register: results
-      until: results.stdout.find(pod_id.stdout_lines[0]) == -1
+      until: results.stdout.find(pod_id.stdout_lines[0][:13]) == -1
       retries: 30
       delay: 5
     - name: Pausing
