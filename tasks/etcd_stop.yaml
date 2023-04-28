@@ -1,7 +1,7 @@
 ---
 - name: Stop phase - stop etcd block
-  block:
   tags: stopetcd
+  block:
   - name: Stop phase - getting etcd manifest file path
     set_fact:
       etcd_manifest: "{{ item }}"

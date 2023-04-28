@@ -3,8 +3,8 @@
 #  debug:
 #    msg: etcd path "{{ kube_manifests_backup_dir }}/{{ etcd_manifest | basename }}"
 - name: Restart phase - etcd restart block
-  block:
   tags: startetcd
+  block:
   - name: Restart phase - restoring etcd manifest to {{ kube_manifests_dir }}
     copy:
       remote_src: true
