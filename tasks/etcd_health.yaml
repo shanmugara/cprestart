@@ -6,5 +6,5 @@
 
 - name: Restart phase - verifying etcd cluster health by node
   debug:
-    msg: "{{ item }}"
+    msg: "{{ item.health }}"
   loop: "{{ etcd_h_json.stdout_lines[0] }}"
