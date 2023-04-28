@@ -1,36 +1,39 @@
 ---
-- name: Stop phase - getting etcd manifest file path
-  set_fact:
-    etcd_manifest: "{{ item }}"
-  when: item is regex("/etcd.yaml$")
-  loop: "{{ files_list_dict[inventory_hostname] }}"
+- name: Stop phase - stop etcd block
+  block:
+  tags: stopetcd
+  - name: Stop phase - getting etcd manifest file path
+    set_fact:
+      etcd_manifest: "{{ item }}"
+    when: item is regex("/etcd.yaml$")
+    loop: "{{ files_list_dict[inventory_hostname] }}"
 
-- name: Stop phase - reading manifest file {{ etcd_manifest }}
-  shell:
-    cmd: "cat {{ etcd_manifest }}"
-  register: manifest
+  - name: Stop phase - reading manifest file {{ etcd_manifest }}
+    shell:
+      cmd: "cat {{ etcd_manifest }}"
+    register: manifest
 
-- name: Stop phase - getting static_pod name from manifest file {{ etcd_manifest }}
-  set_fact:
-    etcd_pod_name: "{{ manifest_yaml.metadata.name }}-{{ inventory_hostname }}"
-  vars:
-    manifest_yaml: "{{ manifest.stdout | from_yaml }}"
+  - name: Stop phase - getting static_pod name from manifest file {{ etcd_manifest }}
+    set_fact:
+      etcd_pod_name: "{{ manifest_yaml.metadata.name }}-{{ inventory_hostname }}"
+    vars:
+      manifest_yaml: "{{ manifest.stdout | from_yaml }}"
 
-- name: Stop phase - fetching pod id for {{ etcd_pod_name }}
-  shell:
-    cmd: sudo crictl pods --name ^{{ etcd_pod_name }}$ --state ready -q
-  register: pod_id
-  changed_when: "pod_id is not failed"
+  - name: Stop phase - fetching pod id for {{ etcd_pod_name }}
+    shell:
+      cmd: sudo crictl pods --name ^{{ etcd_pod_name }}$ --state ready -q
+    register: pod_id
+    changed_when: "pod_id is not failed"
 
-- name: Stop phase - removing pod {{ etcd_pod_name }} from static_pod path {{ etcd_manifest | dirname }}
-  file:
-    path: "{{ etcd_manifest }}"
-    state: absent
+  - name: Stop phase - removing pod {{ etcd_pod_name }} from static_pod path {{ etcd_manifest | dirname }}
+    file:
+      path: "{{ etcd_manifest }}"
+      state: absent
 
-- name: Stop phase - waiting for pod {{ etcd_pod_name }} to stop
-  shell:
-    cmd: sudo crictl ps --state running -p {{ pod_id.stdout_lines[0] }} --no-trunc
-  register: results
-  until: results.stdout.find(pod_id.stdout_lines[0][:13]) == -1
-  retries: 30
-  delay: 5
+  - name: Stop phase - waiting for pod {{ etcd_pod_name }} to stop
+    shell:
+      cmd: sudo crictl ps --state running -p {{ pod_id.stdout_lines[0] }} --no-trunc
+    register: results
+    until: results.stdout.find(pod_id.stdout_lines[0][:13]) == -1
+    retries: 30
+    delay: 5

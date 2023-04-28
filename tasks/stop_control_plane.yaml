@@ -1,5 +1,6 @@
 ---
 - name: Stop phase - stop kubernetes api and manager pods block
+  tags: stopcp
   block:
     - name: Stop phase - reading manifest file {{ item }}
       shell:

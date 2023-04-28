@@ -1,18 +1,29 @@
 ---
 # tasks file for cprestart
-#- name: Gather kubernetes manifests files
-#  import_tasks: collect_manifests.yaml
-#- name: Backup kubernetes manifests dir
-#  import_tasks: backup_manifest_files.yaml
-#
-#- name: Stop kubernetes control plane pods
-#  import_tasks: stop_control_plane_loop.yaml
-#- name: Stop etcd server pods
-#  import_tasks: etcd_stop.yaml
-#- name: Restart etcd server pods
-#  import_tasks: etcd_start.yaml
-#- name: Restart kubernetes control plane pods
-#  import_tasks: restart_control_plane_loop.yaml
+- name: Gather kubernetes manifests files
+  import_tasks: collect_manifests.yaml
+  tags: ['init']
+
+- name: Backup kubernetes manifests dir
+  import_tasks: backup_manifest_files.yaml
+  tags: ['backup']
+
+- name: Stop kubernetes control plane pods
+  import_tasks: stop_control_plane_loop.yaml
+  tags: ['stopcp']
+
+- name: Stop etcd server pods
+  import_tasks: etcd_stop.yaml
+  tags: ['stopetcd']
+
+- name: Restart etcd server pods
+  import_tasks: etcd_start.yaml
+  tags: ['startetcd']
+
+- name: Restart kubernetes control plane pods
+  import_tasks: restart_control_plane_loop.yaml
+  tags: ['startcp']
 
 - name: Debug etcd health
   import_tasks: etcd_health.yaml
+  tags: ['etcdhealth']

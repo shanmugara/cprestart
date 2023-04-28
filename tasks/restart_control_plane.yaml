@@ -1,5 +1,6 @@
 ---
 - name: Restart phase - Restart control plane pods block
+  tags: startcp
   block:
   - name: Restart phase - getting backup path for {{ item | basename }}
     set_fact:
