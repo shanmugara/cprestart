@@ -1,0 +1,36 @@
+---
+- name: Get etcd manifest file path
+  set_fact:
+    etcd_manifest: "{{ item }}"
+  when: item is regex("etcd.yaml$")
+  loop: "{{ files_list_dict[inventory_hostname] }}"
+
+- name: Read manifest file {{ item }}
+  shell:
+    cmd: "cat {{ etcd_manifest }}"
+  register: manifest
+
+- name: Get static_pod name from manifest file
+  set_fact:
+    etcd_pod_name: "{{ manifest_yaml.metadata.name }}-{{ inventory_hostname }}"
+    vars:
+      manifest_yaml: "{{ manifest.stdout | from_yaml }}"
+
+- name: Fetch pod id for {{ etcd_pod_name }}
+  shell:
+    cmd: sudo crictl pods --name ^{{ etcd_pod_name }}$ --state ready -q
+  register: pod_id
+  changed_when: "pod_id is not failed"
+
+- name: Remove pod {{ etcd_pod_name }} from static_pod path
+  file:
+    path: "{{ etcd_manifest }}"
+    state: absent
+
+- name: Waiting for pod {{ etcd_pod_name }} to stop
+  shell:
+    cmd: sudo crictl ps --state running -p {{ pod_id.stdout_lines[0] }} --no-trunc
+  register: results
+  until: results.stdout.find(pod_id.stdout_lines[0][:13]) == -1
+  retries: 30
+  delay: 5

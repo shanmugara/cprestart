@@ -6,7 +6,9 @@
   import_tasks: backup_manifest_files.yaml
 - name: Stop kubernetes control plane pods
   import_tasks: stop_control_plane_loop.yaml
+- name: Stop etcd server pods
+  import_tasks: etcd_stop.yaml
+- name: Restart etcd server pods
+  import_tasks: etcd_restarts.yaml
 - name: Restart kubernetes control plane pods
   import_tasks: restart_control_plane_loop.yaml
-- name: Check etcd state after restart
-  import_tasks: etcd_restarts.yaml
