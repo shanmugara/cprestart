@@ -30,7 +30,7 @@
 
     - name: Debug print
       debug:
-        msg: pod_id {{ pod_id.stdout_lines }}
+        msg: pod_id {{ pod_id.stdout_lines[0] }}
 
     - name: Wait for the pod {{ pod_name }} to stop
       shell:
