@@ -17,5 +17,5 @@
     label: "{{ item.path }}"
 
 - name: Debug print
-    debug:
-      msg: Debug print {{ files_list_dict[inventory_hostname] }}
+  debug:
+    msg: Debug print {{ files_list_dict[inventory_hostname] }}
