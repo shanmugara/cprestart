@@ -15,6 +15,7 @@
   loop: "{{ manifests.files }}"
   loop_control:
     label: "{{ item.path }}"
- - name: Debug print
-   debug:
-     msg: Debug print {{ files_list_dict[inventory_hostname] }}
+
+- name: Debug print
+    debug:
+      msg: Debug print {{ files_list_dict[inventory_hostname] }}
