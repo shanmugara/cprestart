@@ -30,13 +30,13 @@
 
     - name: Debug print
       debug:
-        msg: pod_id {{ pod_id }}
+        msg: pod_id {{ pod_id.stdout_lines }}
 
     - name: Wait for the pod {{ pod_name }} to stop
       shell:
         cmd: sudo crictl ps --state exited -q
       register: results
-      until: results.stdout.find(pod_id) != -1
+      until: results.stdout.find(pod_id.stdout_lines) != -1
       retries: 30
       delay: 5
 #          - name: Stopped pods list of ids
