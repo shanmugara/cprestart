@@ -3,27 +3,34 @@
 - name: Gather kubernetes manifests files
   import_tasks: collect_manifests.yaml
   tags: [init]
+  when: (init is defined) and (init | bool)
 
 - name: Backup kubernetes manifests dir
   import_tasks: backup_manifest_files.yaml
   tags: [backup]
+  when: (backup is defined) and (backup | bool)
 
 - name: Stop kubernetes control plane pods
   import_tasks: stop_control_plane_loop.yaml
   tags: [stopcp]
+  when: (stopcp is defined) and (stopcp | bool)
 
 - name: Stop etcd server pods
   import_tasks: etcd_stop.yaml
   tags: [stopetcd]
+  when: (stopetcd is defined) and (stopetcd | bool)
 
 - name: Restart etcd server pods
   import_tasks: etcd_start.yaml
   tags: [startetcd]
+  when: (startetcd is defined) and (startetcd | bool)
 
-- name: Debug etcd health
+- name: Check etcd health
   import_tasks: etcd_health.yaml
   tags: [etcdhealth]
+  when: (etcdhealth is defined) and (etcdhealth | bool)
 
 - name: Restart kubernetes control plane pods
   import_tasks: restart_control_plane_loop.yaml
   tags: [startcp]
+  when: (startcp is defined) and (startcp | bool)
