@@ -27,3 +27,12 @@
   tags: debug
   debug:
     msg: print 2 "{{ etcd_h_json.stdout_lines[0] | from_json }}"
+
+- name: Restart phase - check etcd health again
+  tags: debug
+  shell:
+    cmd: /usr/local/bin/etcdctl.sh endpoint health -w json
+  register: etcd_h_json
+  failed_when: etcd_h_json.stdout_lines[0] | from_json | selectattr('health','equalto', false) | list | count > 0
+  retries: 30
+  delay: 5
