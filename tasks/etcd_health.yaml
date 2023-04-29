@@ -10,6 +10,11 @@
       until: etcd_h_json.stdout_lines[0] | from_json | selectattr('health','equalto', false) | list | count == 0
       retries: 30
       delay: 5
+
+    - name: Restart phase - set etcd health fact
+      set_fact:
+        etcd_healthy: true
+        cacheable: yes
   always:
     - name: Restart phase - etcd health check status
       debug:
@@ -17,8 +22,5 @@
       loop: "{{ etcd_h_json.stdout_lines[0] }}"
       loop_control:
         label: "{{ item.endpoint }}"
-    - name: Restart phase - set etcd health fact
-      set_fact:
-        etcd_healthy: true
-        cacheable: yes
+
   when: (etcd_healthy is undefined) or (etcd_healthy == false)
