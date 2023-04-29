@@ -22,18 +22,3 @@
         etcd_healthy: true
         cacheable: yes
   when: (etcd_healthy is undefined) or (etcd_healthy == false)
-
-#
-#- name: Restart phase - etcd health block
-#  tags: etcdhealth
-#  block:
-#  - name: Restart phase - getting etcd cluster health
-#    shell:
-#      cmd: /usr/local/bin/etcdctl.sh endpoint health -w json
-#    register: etcd_h_json
-#
-#  - name: Restart phase - verifying etcd cluster health by node
-#    debug:
-#      msg: "{{ item }}"
-#    failed_when: item.health != true
-#    loop: "{{ etcd_h_json.stdout_lines[0] }}"
