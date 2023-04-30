@@ -13,4 +13,4 @@
 
   - name: CRI - debug print
     debug:
-      msg: CRI "{{ cri }}"\n "{{ kubelet_cmdstdout_lines[0] }}"
+      msg: CRI "{{ cri }}"\n "{{ kubelet_cmd.stdout_lines[0] }}"
