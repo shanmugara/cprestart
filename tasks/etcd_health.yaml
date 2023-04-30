@@ -3,7 +3,6 @@
   tags: etcdhealth
   block:
     - name: Restart phase - checking etcd cluster endpoint health
-      tags: debug
       shell:
         cmd: /usr/local/bin/etcdctl.sh endpoint health -w json
       register: etcd_h_json
