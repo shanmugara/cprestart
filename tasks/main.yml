@@ -39,6 +39,9 @@
   import_tasks: restart_control_plane_loop.yaml
   tags: [startcp]
   when: (startcp is defined) and (startcp | bool)
-# - name: debug etcdhealth
-#   import_tasks: debug_only.yaml
+
+- name: debug etcdhealth
+  import_tasks: debug_only.yaml
+  tags: [debug]
+  when: (debug is defined) and (debug | bool)
 
