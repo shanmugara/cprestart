@@ -11,6 +11,6 @@
     set_fact:
       cri: "{{ (kubelet_cmd.stdout_lines[0] | regex_search('--container-runtime-endpoint=(\/\\w+){1,}')).split('=')[1].split('/')[3] | trim }}"
 
-  - name: CRI - debug print
+  - name: CRI
     debug:
-      msg: CRI {{ cri }}
+      msg: Detected CRI {{ cri }}
