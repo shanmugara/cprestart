@@ -4,11 +4,11 @@
   block:
   - name: Restart phase - checking etcd cluster endpoint health
     shell:
-      cmd: /usr/local/bin/etcdctl.sh endpoint health -w json
+      cmd: "{{ etcdctl_sh }}" endpoint health -w json
     register: etcd_h_json
     until: etcd_h_json.stdout_lines[0] | from_json | selectattr('health','equalto', false) | list | count == 0
-    retries: 30
-    delay: 5
+    retries: "{{ retry_count }}"
+    delay: "{{ retry_delay }}"
 
   when: (etcd_healthy is undefined) or (etcd_healthy == false)
   rescue:
