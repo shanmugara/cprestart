@@ -9,7 +9,7 @@
 
   - name: CRI - Getting CRI socket name
     set_fact:
-      cri: "{{ (kubelet_cmd | regex_search('--container-runtime-endpoint=(.)+(\s)')).split('=')[1].split('/')[3] | trim }}"
+      cri: "{{ (kubelet_cmd | regex_search('--container-runtime-endpoint=(.)+('\s')')).split('=')[1].split('/')[3] | trim }}"
 
   - name: CRI - debug print
     debug:
