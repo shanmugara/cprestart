@@ -6,41 +6,61 @@
 #  when: item is regex('/etcd.yaml$')
 #  loop: "{{ files_list_dict[inventory_hostname] }}"
 
-- name: Restart phase - check etcd health again
-  tags: debug
-  shell:
-    cmd: /usr/local/bin/etcdctl.sh endpoint health -w json
-  register: etcd_h_json
-
-- name: Debug print 1
-  tags: debug
-  debug:
-    msg: print 1 "{{ etcd_h_json }}"
-
-- name: debug print 2
-  tags: debug
-  debug:
-    msg: print 2 "{{ etcd_h_json.stdout_lines }}"
-
-
-- name: debug print 3
-  tags: debug
-  debug:
-    msg: print 2 "{{ etcd_h_json.stdout_lines[0] | from_json }}"
-
-- name: Debug etcd restart block
+- name: Geting CRI socket from host
   tags: debug
   block:
-    - name: Restart phase - check etcd health again
-      tags: debug
-      shell:
-        cmd: /usr/local/bin/etcdctl.sh endpoint health -w json
-      register: etcd_h_json
-      until: etcd_h_json.stdout_lines[0] | from_json | selectattr('health','equalto', false) | list | count == 1
-      retries: 5
-      delay: 5
-  rescue:
-    - name: Print etcd health
-      debug:
-        msg: etcd "{{ item }}"
-      loop: "{{ etcd_h_json.stdout_lines[0] }}"
+  - name: CRI - Getting kubelet cmdline from proc
+    shell:
+      cmd: tr \\0 ' ' < /proc/"$(pgrep kubelet)"/cmdline
+    register: kubelet_cmd
+
+  - name: Debug print 1
+    debug:
+      msg: "{{ (kubelet_cmd.stdout_lines[0] | regex_search('(--container-runtime-endpoint=)(.+)(\\s)')) }}"
+
+  - name: CRI - Getting CRI socket name
+    set_fact:
+      cri: "{{ (kubelet_cmd.stdout_lines[0] | regex_search('(--container-runtime-endpoint=)(.+)(\\s)')).split('=')[1].split('/')[3] | trim }}"
+
+  - name: CRI - debug print
+    debug:
+      msg: CRI "{{ cri }}"\n "{{ kubelet_cmd.stdout_lines[0] }}"
+#
+# - name: Restart phase - check etcd health again
+#   tags: debug
+#   shell:
+#     cmd: /usr/local/bin/etcdctl.sh endpoint health -w json
+#   register: etcd_h_json
+#
+# - name: Debug print 1
+#   tags: debug
+#   debug:
+#     msg: print 1 "{{ etcd_h_json }}"
+#
+# - name: debug print 2
+#   tags: debug
+#   debug:
+#     msg: print 2 "{{ etcd_h_json.stdout_lines }}"
+#
+#
+# - name: debug print 3
+#   tags: debug
+#   debug:
+#     msg: print 2 "{{ etcd_h_json.stdout_lines[0] | from_json }}"
+#
+# - name: Debug etcd restart block
+#   tags: debug
+#   block:
+#     - name: Restart phase - check etcd health again
+#       tags: debug
+#       shell:
+#         cmd: /usr/local/bin/etcdctl.sh endpoint health -w json
+#       register: etcd_h_json
+#       until: etcd_h_json.stdout_lines[0] | from_json | selectattr('health','equalto', false) | list | count == 1
+#       retries: 5
+#       delay: 5
+#   rescue:
+#     - name: Print etcd health
+#       debug:
+#         msg: etcd "{{ item }}"
+#       loop: "{{ etcd_h_json.stdout_lines[0] }}"
