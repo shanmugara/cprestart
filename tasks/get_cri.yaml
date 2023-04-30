@@ -5,7 +5,7 @@
   - name: CRI - Getting kubelet cmdline from proc
     shell:
       cmd: tr \\0 ' ' < /proc/"$(pgrep kubelet)"/cmdline
-    register: kubelet_cmd
+    register: kubelet_cmd.stdout_lines[0]
 
   - name: CRI - Getting CRI socket name
     set_fact:
