@@ -30,7 +30,7 @@
     block:
     - name: Restart phase - getting pod ready status for {{ etcd_pod_name }}
       shell:
-        cmd: sudo crictl pods --name ^{{ etcd_pod_name }}$ --state ready -q
+        cmd: "sudo crictl pods --name ^{{ etcd_pod_name }}$ --state ready -q"
       register: result
       until: "result is not failed"
       retries: "{{ retry_count }}"

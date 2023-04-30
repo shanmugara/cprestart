@@ -21,7 +21,7 @@
     block:
     - name: Stop phase - fetching pod id for {{ etcd_pod_name }}
       shell:
-        cmd: sudo crictl pods --name ^{{ etcd_pod_name }}$ --state ready -q
+        cmd: "sudo crictl pods --name ^{{ etcd_pod_name }}$ --state ready -q"
       register: pod_id
       changed_when: "pod_id is not failed"
     when: cri == 'containerd'
@@ -35,7 +35,7 @@
     block:
     - name: Stop phase - waiting for pod {{ etcd_pod_name }} to stop
       shell:
-        cmd: sudo crictl ps --state running -p {{ pod_id.stdout_lines[0] }} --no-trunc
+        cmd: "sudo crictl ps --state running -p {{ pod_id.stdout_lines[0] }} --no-trunc"
       register: results
       until: results.stdout.find(pod_id.stdout_lines[0][:13]) == -1
       retries: "{{ retry_count }}"
