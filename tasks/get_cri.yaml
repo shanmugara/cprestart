@@ -13,4 +13,4 @@
 
   - name: CRI - debug print
     debug:
-      msg: CRI "{{ cri }}"
+      msg: CRI "{{ cri }}"\n "{{ kubelet_cmd }}"

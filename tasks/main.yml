@@ -2,6 +2,8 @@
 # tasks file for cprestart
 - name: Get CRI from host
   import_tasks: get_cri.yaml
+  tags: [cri]
+  when: (cri is defined) and (cri | bool)
 
 - name: Gather kubernetes manifests files
   import_tasks: collect_manifests.yaml
