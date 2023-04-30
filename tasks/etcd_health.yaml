@@ -16,6 +16,10 @@
         etcd_healthy: true
         cacheable: yes
   always:
+    - name: debug print
+      debug:
+        msg: debug {{ etcd_h_json }}
+
     - name: Restart phase - etcd health check status
       debug:
         msg: etcd health "{{ item }}"
