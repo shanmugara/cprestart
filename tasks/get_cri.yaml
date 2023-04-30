@@ -5,11 +5,11 @@
   - name: CRI - Getting kubelet cmdline from proc
     shell:
       cmd: tr \\0 ' ' < /proc/"$(pgrep kubelet)"/cmdline
-    register: kubelet_cmd.stdout_lines[0]
+    register: kubelet_cmd
 
   - name: CRI - Getting CRI socket name
     set_fact:
-      cri: "{{ (kubelet_cmd | regex_search('(--container-runtime-endpoint=)(.+)(\\s)')).split('=')[1].split('/')[3] | trim }}"
+      cri: "{{ (kubelet_cmd.stdout_lines[0] | regex_search('(--container-runtime-endpoint=)(.+)(\\s)')).split('=')[1].split('/')[3] | trim }}"
 
   - name: CRI - debug print
     debug:
