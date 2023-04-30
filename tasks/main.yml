@@ -28,12 +28,15 @@
 #   tags: [startetcd]
 #   when: (startetcd is defined) and (startetcd | bool)
 
-- name: Check etcd health
-  import_tasks: etcd_health.yaml
-  tags: [etcdhealth]
-  when: (etcdhealth is defined) and (etcdhealth | bool)
+# - name: Check etcd health
+#   import_tasks: etcd_health.yaml
+#   tags: [etcdhealth]
+#   when: (etcdhealth is defined) and (etcdhealth | bool)
 
 # - name: Restart kubernetes control plane pods
 #   import_tasks: restart_control_plane_loop.yaml
 #   tags: [startcp]
 #   when: (startcp is defined) and (startcp | bool)
+- name: debug etcdhealth
+  import_tasks: debug_only.yaml
+
