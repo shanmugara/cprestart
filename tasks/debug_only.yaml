@@ -16,7 +16,7 @@
 
   - name: Debug print 1
     debug:
-      msg: "{{ (kubelet_cmd.stdout_lines[0] | regex_search('--container-runtime-endpoint=(\[\:\w\/\]{0,})')).split('=')[1].split('/')[3] | trim }}"
+      msg: "{{ (kubelet_cmd.stdout_lines[0] | regex_search('--container-runtime-endpoint=('[\:\w\/]'{0,})')).split('=')[1].split('/')[3] | trim }}"
 
   - name: CRI - Getting CRI socket name
     set_fact:
