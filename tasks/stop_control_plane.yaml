@@ -26,7 +26,7 @@
       block:
       - name: Stop phase - fetching container id for {{ pod_name }}
         shell:
-          cmd: 'sudo docker container ls -f name= ^k8s_POD_{{ pod_name }}$ -q'
+          cmd: 'sudo docker container ls -f name=k8s_POD_{{ pod_name }} -q'
         register: container_id
         changed_when: "container_id is not failed"
       when: cri == 'docker'
