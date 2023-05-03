@@ -22,6 +22,14 @@
         changed_when: "pod_id is not failed"
       when: cri == 'containerd'
 
+    - name: Stop phase - fetching container id for {{ pod_name }} block
+      block:
+      - name: Stop phase - fetching container id for {{ pod_name }}
+        shell:
+          cmd: 'sudo docker container ls -f name= ^k8s_POD_{{ pod_name }}$ -q'
+        register: container_id
+        changed_when: "container_id is not failed"
+      when: cri == 'docker'
 
     - name: Stop phase - removing pod {{ pod_name }} from static_pod path {{ item | dirname }}
       file:
@@ -38,3 +46,14 @@
         retries: "{{ retry_count }}"
         delay: "{{ retry_delay }}"
       when: cri == 'containerd'
+
+    - name: Stop phase - waiting for container {{ pod_name }} to stop block
+        block:
+        - name: Stop phase - waiting for container k8s_POD_{{ pod_name }} to stop
+          shell:
+            cmd: 'sudo docker container ls -f id={{ container_d.stdout_line[0] }} -f status=exited -q'
+          register: results
+          until: results.stdout.find(pod_id.stdout_lines[0]== '{{ container_id.stdout_lines[0] }}'
+          retries: "{{ retry_count }}"
+          delay: "{{ retry_delay }}"
+        when: cri == 'docker'
