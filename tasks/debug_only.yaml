@@ -19,7 +19,7 @@
 
   - name: Get cri base name
     set_fact:
-      cri: ' {{ cri_full.stdout_lines[0].split(":")[0] }}'
+      cri: ' {{ cri_full.stdout_lines[0].split(":")[0] | trim }}'
 
   - name: Debug print 2
     debug:
