@@ -34,7 +34,7 @@
       container_name: 'k8s_POD_kube-controller-manager-babka-1-p8vx5hwmx97xrpg'
   - name: get container ID
     shell:
-      cmd: 'docker container ls -f name={{ container_name }}'
+      cmd: "docker container ls -f name={{ container_name }} --format '{{.ID}}'"
     register: container_id
   - name: debug print container_id
     debug:
