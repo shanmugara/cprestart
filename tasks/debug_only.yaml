@@ -34,7 +34,7 @@
       container_name: 'k8s_POD_kube-controller-manager-babka-1-p8vx5hwmx97xrpg'
   - name: get container
     shell:
-      cmd: 'docker container ls -f name={{ container_name }}'
+      cmd: 'docker container ls -f name={{ container_name }} --no-headers'
     register: cmd_out
   - name: debug print cmd_out
     debug:
