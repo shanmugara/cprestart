@@ -2,14 +2,14 @@
 - name: Geting CRI socket from host
   tags: getcri
   block:
-  - name: CRI - Getting kubelet cmdline from proc
+  - name: CRI - Getting container runtime from nodeInfo
     shell:
-      cmd: tr \\0 ' ' < /proc/"$(pgrep kubelet)"/cmdline
+      cmd: "kubectl get nodes {{ inventory_hostname }} -o jsonpath='{$.status.nodeInfo.containerRuntimeVersion}'"
     register: kubelet_cmd
 
-  - name: CRI - Getting CRI socket name
+  - name: CRI - Getting CRI basename
     set_fact:
-      cri: '{{ (kubelet_cmd.stdout_lines[0] | regex_search("--container-runtime-endpoint=[:\w\/]{0,}")).split("=")[1].split("/run/")[1].split("/")[0] | trim }}'
+      cri: '{{ cri_full.stdout_lines[0].split(":")[0] | trim }}'
     failed_when: cri not in ['containerd', 'docker']
 
   - name: CRI
