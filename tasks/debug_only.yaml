@@ -45,7 +45,7 @@
   - name: block debug print
     debug:
       msg: Test debug print for block
-  when: (container_id is defined)
+  when: (container_id not defined)
 #
 #- name: Geting CRI socket from host
 #  tags: debug
