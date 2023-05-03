@@ -39,6 +39,10 @@
   - name: debug print container_id
     debug:
       msg: cmd_out '{{ container_id.stdout_lines[0] }}'
+  block:
+  - name: block debug print
+    debug:
+      msg: Test debug print for block
 #
 #- name: Geting CRI socket from host
 #  tags: debug
