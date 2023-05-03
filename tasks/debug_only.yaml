@@ -28,7 +28,7 @@
 
   - name: CRI - debug print
     debug:
-      msg: CRI "{{ cri }}"\n "{{ kubelet_cmd.stdout_lines[0] }}"
+      msg: CRI '{{ cri }}'\n '{{ kubelet_cmd.stdout_lines[0] }}'
 #
 # - name: Restart phase - check etcd health again
 #   tags: debug
