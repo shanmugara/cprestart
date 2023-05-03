@@ -51,7 +51,7 @@
       block:
       - name: Stop phase - waiting for container k8s_POD_{{ pod_name }} to stop
         shell:
-          cmd: 'sudo docker container ls -f id={{ container_d.stdout_lines[0] }} -f status=exited -q'
+          cmd: 'sudo docker container ls -f id={{ container_id.stdout_lines[0] }} -f status=exited -q'
         register: results
         until: results.stdout.find(pod_id.stdout_lines[0]== '{{ container_id.stdout_lines[0] }}'
         retries: "{{ retry_count }}"
