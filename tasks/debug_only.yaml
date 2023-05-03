@@ -14,6 +14,10 @@
       cmd: tr \\0 ' ' < /proc/"$(pgrep kubelet)"/cmdline
     register: kubelet_cmd
 
+  - name: Debug print a
+    debug:
+      msg: cmd "{{ kubelet_cmd }}"
+
   - name: Debug print 1
     debug:
       msg: '{{ (kubelet_cmd.stdout_lines[0] | regex_search("--container-runtime-endpoint=[:\w\/]{0,}")).split("=")[1].split("/var/run/")[1].split("/")[0] | trim }}'
