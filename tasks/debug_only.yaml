@@ -5,15 +5,17 @@
 #    etcd_file_name: "{{ item }}"
 #  when: item is regex('/etcd.yaml$')
 #  loop: "{{ files_list_dict[inventory_hostname] }}"
-- name: Get container runtime
-  shell:
-    cmd: "kubectl get nodes {{ inventory_hostname }} -o jsonpath='{$.status.nodeInfo.containerRuntimeVersion}'"
-  register: cri_full
-
-
-- name: Debug print
-  debug:
-    msg: cri name '{{ cri_full }}'
+- name: CRI block
+  tags: debug
+  block:
+  - name: Get container runtime
+    shell:
+      cmd: "kubectl get nodes {{ inventory_hostname }} -o jsonpath='{$.status.nodeInfo.containerRuntimeVersion}'"
+    register: cri_full
+  
+  - name: Debug print
+    debug:
+      msg: cri name '{{ cri_full }}'
 
 #
 #- name: Geting CRI socket from host
