@@ -12,10 +12,18 @@
     shell:
       cmd: "kubectl get nodes {{ inventory_hostname }} -o jsonpath='{$.status.nodeInfo.containerRuntimeVersion}'"
     register: cri_full
-  
+
   - name: Debug print
     debug:
-      msg: cri name '{{ cri_full }}'
+      msg: cri name '{{ cri_full.stdout_lines[0] }}'
+
+  - name: Get cri base name
+    set_fact:
+      cri: ' {{ cri_full.stdout_lines[0].split(":")[0] }}'
+
+  - name: Debug print 2
+    debug:
+      msg: basename '{{ cri }}'
 
 #
 #- name: Geting CRI socket from host
