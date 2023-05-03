@@ -5,7 +5,7 @@
   - name: CRI - Getting container runtime from nodeInfo
     shell:
       cmd: "kubectl get nodes {{ inventory_hostname }} -o jsonpath='{$.status.nodeInfo.containerRuntimeVersion}'"
-    register: kubelet_cmd
+    register: cri_full
 
   - name: CRI - Getting CRI basename
     set_fact:
