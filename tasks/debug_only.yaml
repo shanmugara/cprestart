@@ -5,30 +5,40 @@
 #    etcd_file_name: "{{ item }}"
 #  when: item is regex('/etcd.yaml$')
 #  loop: "{{ files_list_dict[inventory_hostname] }}"
+- name: Get container runtime
+  shell:
+    cmd: "kubectl get nodes {{ inventory_hostname }} -o jsonpath='{$.status.nodeInfo.containerRuntimeVersion}'"
+  register: cri_full
 
-- name: Geting CRI socket from host
-  tags: debug
-  block:
-  - name: CRI - Getting kubelet cmdline from proc
-    shell:
-      cmd: tr \\0 ' ' < /proc/"$(pgrep kubelet)"/cmdline
-    register: kubelet_cmd
 
-  - name: Debug print a
-    debug:
-      msg: cmd "{{ kubelet_cmd }}"
+- name: Debug print
+  debug:
+    msg: cri name '{{ cri_full }}'
 
-  - name: Debug print 1
-    debug:
-      msg: '{{ (kubelet_cmd.stdout_lines[0] | regex_search("--container-runtime-endpoint=[:\w\/]{0,}")).split("=")[1].split("/run/")[1].split("/")[0] | trim }}'
-
-  - name: CRI - Getting CRI socket name
-    set_fact:
-      cri: '{{ (kubelet_cmd.stdout_lines[0] | regex_search("--container-runtime-endpoint=[:\w\/]{0,}")).split("=")[1].split("/run/")[1].split("/")[0] | trim }}'
-
-  - name: CRI - debug print
-    debug:
-      msg: CRI '{{ cri }}'\n '{{ kubelet_cmd.stdout_lines[0] }}'
+#
+#- name: Geting CRI socket from host
+#  tags: debug
+#  block:
+#  - name: CRI - Getting kubelet cmdline from proc
+#    shell:
+#      cmd: tr \\0 ' ' < /proc/"$(pgrep kubelet)"/cmdline
+#    register: kubelet_cmd
+#
+#  - name: Debug print a
+#    debug:
+#      msg: cmd "{{ kubelet_cmd }}"
+#
+#  - name: Debug print 1
+#    debug:
+#      msg: '{{ (kubelet_cmd.stdout_lines[0] | regex_search("--container-runtime-endpoint=[:\w\/]{0,}")).split("=")[1].split("/run/")[1].split("/")[0] | trim }}'
+#
+#  - name: CRI - Getting CRI socket name
+#    set_fact:
+#      cri: '{{ (kubelet_cmd.stdout_lines[0] | regex_search("--container-runtime-endpoint=[:\w\/]{0,}")).split("=")[1].split("/run/")[1].split("/")[0] | trim }}'
+#
+#  - name: CRI - debug print
+#    debug:
+#      msg: CRI '{{ cri }}'\n '{{ kubelet_cmd.stdout_lines[0] }}'
 #
 # - name: Restart phase - check etcd health again
 #   tags: debug
