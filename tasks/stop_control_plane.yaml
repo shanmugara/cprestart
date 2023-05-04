@@ -57,11 +57,11 @@
         shell:
           cmd: 'sudo docker container ls -f id={{ container_id.stdout_lines[0] }} -f status=exited -q'
         register: results
-        changed_when: (results.stdout_lines[0] == container_id.stdout_lines[0])
+        changed_when: results.stdout_lines[0] > 0
         retries: "{{ retry_count }}"
         delay: "{{ retry_delay }}"
 
       - name: Debug print only remove in prod - results
         debug:
-          msg: results '{{ results }}'
+          msg: results '{{ results.stdout_lines[0] }}'
       when: cri == 'docker'
