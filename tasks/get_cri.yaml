@@ -38,7 +38,4 @@
   - name: CRI - Getting CRI basename
     set_fact:
       cri: '{{ slurp_out.content | b64decode | trim }}'
-  - name: CRI - Debug print only remove in prod
-    debug:
-      msg: cri from file '{{ cri }}'
   when: ((startcp is defined) and (startcp|bool)) or ((startetcd is defined) and (startetcd|bool)) or ((stopetcd is defined) and (stopetcd|bool))

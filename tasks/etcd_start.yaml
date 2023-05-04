@@ -1,7 +1,4 @@
 ---
-#- name: Debug print etcd path
-#  debug:
-#    msg: etcd path "{{ kube_manifests_backup_dir }}/{{ etcd_manifest | basename }}"
 - name: Restart phase - etcd restart block
   tags: startetcd
   block:
@@ -37,3 +34,14 @@
       delay: "{{ retry_delay }}"
       changed_when: result.stdout_lines[0]
     when: cri == 'containerd'
+
+  - name: Restart phase - waiting for container {{ etcd_pod_name }} to start block
+    block:
+    - name: Restart phase - waiting for container {{ etcd_pod_name }} to start
+      shell:
+        cmd: 'sudo docker container ls -f name={{ etcd_pod_name }} -q'
+      register: results
+      until: results.stdout_lines|length  == 2
+      retries: "{{ retry_count }}"
+      delay: "{{ retry_delay }}"
+    when: cri == 'docker'
