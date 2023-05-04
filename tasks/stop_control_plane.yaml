@@ -57,7 +57,7 @@
         shell:
           cmd: 'sudo docker container ls -f id={{ container_id.stdout_lines[0] }} -f status=exited -q'
         register: results
-        until: results.stdout_lines[0] == container_id.stdout_lines[0]
+        changed_when: ('results.stdout_lines[0] is not failed') and (results.stdout_lines[0] == container_id.stdout_lines[0])
         retries: "{{ retry_count }}"
         delay: "{{ retry_delay }}"
       when: cri == 'docker'
