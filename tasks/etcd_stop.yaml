@@ -2,7 +2,7 @@
 - name: Stop phase - stop etcd block
   tags: stopetcd
   block:
-  - name: Stop phase - getting etcd manifest file path
+  - name: Stop phase etcd - getting etcd manifest file path
     set_fact:
        etcd_manifest: "{{ kube_manifests_dir }}/etcd.yaml"
 
@@ -11,7 +11,7 @@
       cmd: "cat {{ etcd_manifest }}"
     register: manifest
 
-  - name: Stop phase - getting static_pod name from manifest file {{ etcd_manifest }}
+  - name: Stop phase etcd - getting static_pod name from manifest file {{ etcd_manifest }}
     set_fact:
       etcd_pod_name: "{{ manifest_yaml.metadata.name }}-{{ inventory_hostname }}"
     vars:
@@ -19,14 +19,14 @@
 
   - name: Stop phase - fetching pod id for {{ etcd_pod_name }} block
     block:
-    - name: Stop phase - fetching pod id for {{ etcd_pod_name }}
+    - name: Stop phase etcd - fetching pod id for {{ etcd_pod_name }}
       shell:
         cmd: "sudo crictl pods --name ^{{ etcd_pod_name }}$ --state ready -q"
       register: pod_id
       changed_when: "pod_id is not failed"
     when: cri == 'containerd'
 
-  - name: Stop phase - fetching container id for {{ etcd_pod_name }} block
+  - name: Stop phase etcd - fetching container id for {{ etcd_pod_name }} block
     block:
     - name: Stop phase - fetching container id for {{ etcd_pod_name }}
       shell:
@@ -35,14 +35,14 @@
       changed_when: "container_id is not failed"
     when: cri == 'docker'
 
-  - name: Stop phase - removing pod {{ etcd_pod_name }} from static_pod path {{ etcd_manifest | dirname }}
+  - name: Stop phase etcd - removing pod {{ etcd_pod_name }} from static_pod path {{ etcd_manifest | dirname }}
     file:
       path: "{{ etcd_manifest }}"
       state: absent
 
-  - name: Stop phase - waiting for pod {{ etcd_pod_name }} to stop block
+  - name: Stop phase etcd - waiting for pod {{ etcd_pod_name }} to stop block
     block:
-    - name: Stop phase - waiting for pod {{ etcd_pod_name }} to stop
+    - name: Stop phase etcd - waiting for pod {{ etcd_pod_name }} to stop
       shell:
         cmd: "sudo crictl ps --state running -p {{ pod_id.stdout_lines[0] }} --no-trunc"
       register: results
@@ -51,9 +51,9 @@
       delay: "{{ retry_delay }}"
     when: cri == 'containerd'
 
-  - name: Stop phase - waiting for container {{ etcd_pod_name }} to stop block
+  - name: Stop phase etcd - waiting for container {{ etcd_pod_name }} to stop block
     block:
-    - name: Stop phase - waiting for container {{ etcd_pod_name }} to stop
+    - name: Stop phase etcd - waiting for container {{ etcd_pod_name }} to stop
       shell:
         cmd: 'sudo docker container ls -f id={{ container_id.stdout_lines[0] }} -q'
       register: results

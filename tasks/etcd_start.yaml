@@ -2,28 +2,28 @@
 - name: Restart phase - etcd restart block
   tags: startetcd
   block:
-  - name: Restart phase - restoring etcd manifest to {{ kube_manifests_dir }}
+  - name: Restart phase etcd - restoring etcd manifest to {{ kube_manifests_dir }}
     copy:
       remote_src: true
       src: "{{ kube_manifests_backup_dir }}/etcd.yaml"
       dest: "{{ kube_manifests_dir }}"
 
-  - name: Restart phase - getting etcd manifest file path
+  - name: Restart phase etcd - getting etcd manifest file path
     set_fact:
       etcd_manifest: "{{ kube_manifests_dir }}/etcd.yaml"
 
-  - name: Restart phase - reading manifest file {{ etcd_manifest }}
+  - name: Restart phase etcd - reading manifest file {{ etcd_manifest }}
     shell:
       cmd: "cat {{ etcd_manifest }}"
     register: manifest
 
-  - name: Restart phase - getting static_pod name from manifest file {{ etcd_manifest }}
+  - name: Restart phase etcd - getting static_pod name from manifest file {{ etcd_manifest }}
     set_fact:
       etcd_pod_name: "{{ manifest_yaml.metadata.name }}-{{ inventory_hostname }}"
     vars:
       manifest_yaml: "{{ manifest.stdout | from_yaml }}"
 
-  - name: Restart phase - getting pod ready status for {{ etcd_pod_name }} block
+  - name: Restart phase etcd - getting pod ready status for {{ etcd_pod_name }} block
     block:
     - name: Restart phase - getting pod ready status for {{ etcd_pod_name }}
       shell:
@@ -35,7 +35,7 @@
       changed_when: result.stdout_lines[0]
     when: cri == 'containerd'
 
-  - name: Restart phase - waiting for container {{ etcd_pod_name }} to start block
+  - name: Restart phase etcd - waiting for container {{ etcd_pod_name }} to start block
     block:
     - name: Restart phase - waiting for container {{ etcd_pod_name }} to start
       shell:

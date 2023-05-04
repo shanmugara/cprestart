@@ -1,23 +1,23 @@
 ---
-- name: Start control plane main loop api-server
+- name: Start control plane main loop kube-api-server
   include_tasks: restart_control_plane.yaml
   loop: "{{ files_list_dict[inventory_hostname] }}"
   when: item is regex("/kube-apiserver.yaml$")
   tags: startcp
 
-- name: Start control plane main loop controller
+- name: Start control plane main loop kube-controller-manager
   include_tasks: restart_control_plane.yaml
   loop: "{{ files_list_dict[inventory_hostname] }}"
   when: item is regex("/kube-controller-manager.yaml$")
   tags: startcp
 
-- name: Start control plane main loop scheduler
+- name: Start control plane main loop kube-scheduler
   include_tasks: restart_control_plane.yaml
   loop: "{{ files_list_dict[inventory_hostname] }}"
   when: item is regex("/kube-scheduler.yaml$")
   tags: startcp
 
-- name: Start control plane main loop others
+- name: Start control plane main loop remaining pods
   include_tasks: restart_control_plane.yaml
   loop: "{{ files_list_dict[inventory_hostname] }}"
   when: >
