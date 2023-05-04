@@ -1,12 +1,34 @@
 ---
-- name: Start control plane main loop
+- name: Start control plane main loop api-server
   include_tasks: restart_control_plane.yaml
   loop: "{{ files_list_dict[inventory_hostname] }}"
-  when: item is not regex("/etcd.yaml$")
+  when: item is regex("/kube-apiserver.yaml$")
   tags: startcp
 
-- name: Start control plane sub loop (docker)
-  include_tasks: docker_container_state.yaml
+- name: Start control plane main loop controller
+  include_tasks: restart_control_plane.yaml
   loop: "{{ files_list_dict[inventory_hostname] }}"
-  when: item is not regex("/etcd.yaml$")
+  when: item is regex("/kube-controller-manager.yaml$")
   tags: startcp
+
+- name: Start control plane main loop scheduler
+  include_tasks: restart_control_plane.yaml
+  loop: "{{ files_list_dict[inventory_hostname] }}"
+  when: item is regex("/kube-scheduler.yaml$")
+  tags: startcp
+
+- name: Start control plane main loop others
+  include_tasks: restart_control_plane.yaml
+  loop: "{{ files_list_dict[inventory_hostname] }}"
+  when: >
+    item is not regex("/kube-scheduler.yaml$") and
+    item is not regex("/kube-controller-manager.yaml$") and
+    item is not regex("/kube-apiserver.yaml$") and
+    item is not regex("/etcd.yaml$")
+  tags: startcp
+#
+#- name: Start control plane sub loop (docker)
+#  include_tasks: docker_container_state.yaml
+#  loop: "{{ files_list_dict[inventory_hostname] }}"
+#  when: item is not regex("/etcd.yaml$")
+#  tags: startcp
