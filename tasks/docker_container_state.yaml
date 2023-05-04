@@ -1,0 +1,23 @@
+---
+- name: Docker CRI restart status check block
+  tags: startcp
+  block:
+  - name: Restart phase (docker) - reading manifest file {{ item }}
+    shell:
+      cmd: "cat {{ item }}"
+    register: manifest
+
+  - name: Restart phase (docker) - getting static_pod name from manifest {{ item | basename }}
+    set_fact:
+      pod_name: "{{ manifest_yaml.metadata.name }}-{{ inventory_hostname }}"
+    vars:
+      manifest_yaml: "{{ manifest.stdout | from_yaml }}"
+
+  - name: Restart phase (docker) - waiting for container {{ pod_name }} to start
+    shell:
+      cmd: 'sudo docker container ls -f name={{ pod_name }} -q'
+    register: results
+    until: results.stdout_lines|length  == 2
+    retries: "{{ retry_count }}"
+    delay: "{{ retry_delay }}"
+  when: cri == 'docker'

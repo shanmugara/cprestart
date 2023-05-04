@@ -4,3 +4,9 @@
   loop: "{{ files_list_dict[inventory_hostname] }}"
   when: item is not regex("/etcd.yaml$")
   tags: startcp
+
+- name: Start control plane sub loop (docker)
+  include_tasks: docker_container_state.yaml
+  loop: "{{ files_list_dict[inventory_hostname] }}"
+  when: item is not regex("/etcd.yaml$")
+  tags: startcp
