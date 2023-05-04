@@ -37,7 +37,7 @@
     register: slurp_out
   - name: CRI - Getting CRI basename
     set_fact:
-      cri: '{{ slurp_out | trim }}'
+      cri: '{{ slurp_out | b64decode | trim }}'
   - name: CRI - Debug print only remove in prod
     debug:
       msg: cri from file '{{ cri }}'
