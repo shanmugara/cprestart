@@ -60,4 +60,8 @@
         changed_when: ('results.stdout_lines[0] is not failed')
         retries: "{{ retry_count }}"
         delay: "{{ retry_delay }}"
+
+      - name: Debug print only remove in prod
+        debug:
+          msg: results '{{ results }}'
       when: cri == 'docker'
