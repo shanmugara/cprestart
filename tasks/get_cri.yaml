@@ -21,7 +21,7 @@
       content: "{{ cri }}"
       dest: "{{ cri_reference }}"
       force: true
-  when: ((stopcp is defined) and (stopcp|bool)) or ((stopetcd is defined) and (stopetcd|bool))
+  when: ((stopcp is defined) and (stopcp|bool))
 
 - name: Getting CRI from reference file for restore op
   tags: getcri
@@ -29,4 +29,4 @@
   - name: CRI - Read from cri reference file
     set_fact:
       cri: "{{ lookup('file', {{ cri_reference }}) }}"
-  when: ((startcp is defined) and (startcp|bool)) or ((startetcd is defined) and (startetcd|bool))
+  when: ((startcp is defined) and (startcp|bool)) or ((startetcd is defined) and (startetcd|bool)) or ((stopetcd is defined) and (stopetcd|bool))
