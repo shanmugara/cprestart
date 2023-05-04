@@ -1,0 +1,18 @@
+---
+- name: Kubernetes pods state check block
+  tags: k8shealth
+  block:
+  - name: Kubernetes health - get list of pods not running
+    shell:
+      cmd: "kubectl get pods -n kube-system --field-selector=phase.state!=Running -o name"
+    register: pods
+
+  - name: Kubernetes health - pods found not running in kube-system
+    debug:
+      msg: 'PODS NOT RUNNING: {{ pods.stdout_lines }}'
+    when: pods.stdout_lines|length > 0
+
+  - name: Kubernetes health - all pods pods are running kube-system
+    debug:
+      msg: 'ALL PODS ARE RUNNING IN KUBE-SYSTEM'
+    when: pods.stdout_lines|length == 0
