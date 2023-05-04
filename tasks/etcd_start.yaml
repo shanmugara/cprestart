@@ -37,7 +37,7 @@
 
   - name: Restart phase etcd - waiting for container {{ etcd_pod_name }} to start block
     block:
-    - name: Restart phase - waiting for container {{ etcd_pod_name }} to start
+    - name: Restart phase etcd - waiting for container {{ etcd_pod_name }} to start
       shell:
         cmd: 'sudo docker container ls -f name={{ etcd_pod_name }} -q'
       register: results
