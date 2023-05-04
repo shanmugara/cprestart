@@ -28,5 +28,5 @@
   block:
   - name: CRI - Read from cri reference file
     set_fact:
-      cri: "{{ lookup('file', {{ cri_reference }}) }}"
+      cri: "{{ lookup('file', cri_reference) }}"
   when: ((startcp is defined) and (startcp|bool)) or ((startetcd is defined) and (startetcd|bool)) or ((stopetcd is defined) and (stopetcd|bool))
