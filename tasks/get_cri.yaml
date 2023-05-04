@@ -16,6 +16,11 @@
     debug:
       msg: Detected CRI {{ cri }}
 
+  - name: CRI - Create tmp base dir
+    file:
+      path: '{{ tmp_base_dir }}'
+      state: directory
+
   - name: CRI - Create reference file for restore op
     copy:
       content: "{{ cri }}"
