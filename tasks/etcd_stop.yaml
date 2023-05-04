@@ -51,13 +51,13 @@
       delay: "{{ retry_delay }}"
     when: cri == 'containerd'
 
-  - name: Stop phase - waiting for container {{ pod_name }} to stop block
+  - name: Stop phase - waiting for container {{ etcd_pod_name }} to stop block
     block:
     - name: Debug print only remove in prod - container_id
       debug:
         msg: container_id '{{ container_id }}'
 
-    - name: Stop phase - waiting for container k8s_POD_{{ pod_name }} to stop
+    - name: Stop phase - waiting for container k8s_POD_{{ etcd_pod_name }} to stop
       shell:
         cmd: 'sudo docker container ls -f id={{ container_id.stdout_lines[0] }} -q'
       register: results
