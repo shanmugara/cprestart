@@ -4,7 +4,7 @@
   block:
   - name: Kubernetes health - get list of pods not running
     shell:
-      cmd: "kubectl get pods -n kube-system --field-selector=phase.state!=Running -o name"
+      cmd: "kubectl get pods -n kube-system --field-selector=status.phase!=Running -o name"
     register: pods
 
   - name: Kubernetes health - pods found not running in kube-system
