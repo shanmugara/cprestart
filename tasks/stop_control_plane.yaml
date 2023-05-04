@@ -63,5 +63,5 @@
 
       - name: Debug print only remove in prod - results
         debug:
-          msg: results '{{ results }}'
+          msg: results '{{ results }}' ****** length '{{ results.stdout_lines|length }}'
       when: cri == 'docker'
