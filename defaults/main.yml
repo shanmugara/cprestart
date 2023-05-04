@@ -3,5 +3,6 @@
 kube_manifests_dir: /etc/kubernetes/manifests
 kube_manifests_backup_dir: /tmp/kubernetes/manifests
 etcdctl_sh : /usr/local/bin/etcdctl.sh
+cri_reference: /tmp/kubernetes/cri.txt
 retry_count: 30
 retry_delay: 5
