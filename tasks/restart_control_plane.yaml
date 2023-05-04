@@ -35,13 +35,13 @@
       changed_when: result.stdout_lines[0]
     when: cri == 'containerd'
 
-  - name: Restart phase - waiting for container {{ pod_name }} to start block
-    block:
-    - name: Restart phase - waiting for container {{ pod_name }} to start
-      shell:
-        cmd: 'sudo docker container ls -f name={{ pod_name }} -q'
-      register: results
-      until: results.stdout_lines|length  == 2
-      retries: "{{ retry_count }}"
-      delay: "{{ retry_delay }}"
-    when: cri == 'docker'
+#  - name: Restart phase - waiting for container {{ pod_name }} to start block
+#    block:
+#    - name: Restart phase - waiting for container {{ pod_name }} to start
+#      shell:
+#        cmd: 'sudo docker container ls -f name={{ pod_name }} -q'
+#      register: results
+#      until: results.stdout_lines|length  == 2
+#      retries: "{{ retry_count }}"
+#      delay: "{{ retry_delay }}"
+#    when: cri == 'docker'
