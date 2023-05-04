@@ -2,6 +2,8 @@
 # tasks file for cprestart
 - name: Check kubernetes pods health in kube-system
   import_tasks: kube_pods_state.yaml
+  tags: k8shealth
+  when: (k8shealth is defined) and (k8shealth | bool)
 
 - name: Get CRI from host
   import_tasks: get_cri.yaml
@@ -47,6 +49,3 @@
   import_tasks: debug_only.yaml
   tags: [debug]
   when: (debug is defined) and (debug | bool)
-
-- name: Check kubernetes pods health in kube-system
-  import_tasks: kube_pods_state.yaml
