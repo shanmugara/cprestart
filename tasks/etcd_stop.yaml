@@ -26,9 +26,9 @@
       changed_when: "pod_id is not failed"
     when: cri == 'containerd'
 
-  - name: Stop phase - fetching container id for {{ pod_name }} block
+  - name: Stop phase - fetching container id for {{ etcd_pod_name }} block
     block:
-    - name: Stop phase - fetching container id for {{ pod_name }}
+    - name: Stop phase - fetching container id for {{ etcd_pod_name }}
       shell:
         cmd: 'sudo docker container ls -f name=k8s_POD_{{ etcd_pod_name }} -q'
       register: container_id
