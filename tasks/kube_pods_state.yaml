@@ -5,7 +5,7 @@
   - name: DEBUG PAUSE
     pause:
       seconds: 60
-  - name: Kubernetes health - get list of pods not running in kube-system namespace
+  - name: Kubernetes health - check for pods not running in kube-system namespace
     shell:
       cmd: "kubectl get pods -n kube-system -o jsonpath='{.items[?(@.status.containerStatuses[*].ready==false)]}'|jq .metadata.name"
     register: pods
@@ -15,12 +15,12 @@
   rescue:
   - name: Kubernetes health - pods found not running in kube-system namespace
     debug:
-      msg: 'PODS NOT RUNNING: {{ pods.stdout_lines }}'
+      var: '{{ pods.stdout_lines }}'
     when: pods.stdout_lines|length > 0
 
   - name: Kubernetes health - all pods running block
     block:
-    - name: Kubernetes health - all pods are running kube-system namespace
+    - name: Kubernetes health - all pods are running in kube-system namespace
       debug:
         msg: 'ALL PODS ARE RUNNING IN KUBE-SYSTEM'
     when: pods.stdout_lines|length == 0
