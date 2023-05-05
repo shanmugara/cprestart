@@ -2,6 +2,9 @@
 - name: Kubernetes pods state check block
   tags: k8shealth
   block:
+  - name: DEBUG PAUSE
+    pause:
+      seconds: 60
   - name: Kubernetes health - get list of pods not running in kube-system namespace
     shell:
       cmd: "kubectl get pods -n kube-system -o jsonpath='{.items[?(@.status.containerStatuses[*].ready==false)]}'|jq .metadata.name"
