@@ -15,7 +15,7 @@
   rescue:
   - name: Kubernetes health - pods found not running in kube-system namespace
     debug:
-      var: '{{ pods.stdout_lines }}'
+      var: '{{ pods.stdout_lines[0] }}'
     when: pods.stdout_lines|length > 0
 
   - name: Kubernetes health - all pods running block
