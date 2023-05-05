@@ -7,3 +7,4 @@ etcdctl_sh : /usr/local/bin/etcdctl.sh
 cri_reference: '{{ tmp_base_dir }}/cri.txt'
 retry_count: 30
 retry_delay: 5
+k8s_healthy: false
