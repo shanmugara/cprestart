@@ -5,7 +5,7 @@
   - name: DEBUG PAUSE
     pause:
       seconds: 60
-  - name: Kubernetes health - check for pods not running in kube-system namespace
+  - name: Kubernetes health - verify all pods are running in kube-system namespace
     shell:
       cmd: "kubectl get pods -n kube-system -o jsonpath='{.items[?(@.status.containerStatuses[*].ready==false)]}'|jq .metadata.name"
     register: pods
