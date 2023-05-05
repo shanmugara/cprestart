@@ -41,7 +41,7 @@
   when: (startcp is defined) and (startcp | bool)
 
 - name: Check kubernetes pods health in kube-system
-  import_tasks: kube_pods_state.yaml
+  include_tasks: kube_pods_state.yaml
   tags: k8shealth
   until: k8s_healthy == true
   retries: 30
