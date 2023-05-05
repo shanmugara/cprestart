@@ -9,7 +9,7 @@
     until:  pods.stdout_lines|length == 0
     retries: '{{ retry_count }}'
     delay: '{{ retry_delay }}'
-
+  rescue:
   - name: Kubernetes health - pods found not running in kube-system namespace
     debug:
       msg: 'PODS NOT RUNNING: {{ pods.stdout_lines }}'
@@ -20,9 +20,6 @@
     - name: Kubernetes health - all pods are running kube-system namespace
       debug:
         msg: 'ALL PODS ARE RUNNING IN KUBE-SYSTEM'
-    - name: Kubernetes health - set fact
-      set_fact:
-        k8s_healthy: true
     when: pods.stdout_lines|length == 0
 
 #     k get pods -o jsonpath='{.items[?(@.status.containerStatuses[*].ready==false)]}'
