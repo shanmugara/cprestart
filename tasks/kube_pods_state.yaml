@@ -4,7 +4,7 @@
   block:
   - name: Kubernetes health - get list of pods not running in kube-system namespace
     shell:
-      cmd: "kubectl get pods -n kube-system --field-selector=status.phase!=Running -o name"
+      cmd: "kubectl get pods -o jsonpath='{.items[?(@.status.containerStatuses[*].ready==false)]}'|jq .metadata.name"
     register: pods
 
   - name: Kubernetes health - pods found not running in kube-system namespace
@@ -16,3 +16,5 @@
     debug:
       msg: 'ALL PODS ARE RUNNING IN KUBE-SYSTEM'
     when: pods.stdout_lines|length == 0
+
+#     k get pods -o jsonpath='{.items[?(@.status.containerStatuses[*].ready==false)]}'
