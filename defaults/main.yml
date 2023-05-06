@@ -6,5 +6,5 @@ kube_manifests_backup_dir: '{{ tmp_base_dir}}/manifests'
 etcdctl_sh : /usr/local/bin/etcdctl.sh
 cri_reference: '{{ tmp_base_dir }}/cri.txt'
 retry_count: 30
-retry_delay: 5
+retry_delay: 10
 k8s_healthy: false
