@@ -12,15 +12,14 @@
     until:  pods.stdout_lines|length == 0
     retries: '{{ retry_count }}'
     delay: '{{ retry_delay }}'
+  - name: Kubernetes health - all pods are running in kube-system namespace
+    debug:
+      msg: 'ALL PODS ARE RUNNING IN KUBE-SYSTEM'
+    when: pods.stdout_lines|length == 0
   rescue:
   - name: Kubernetes health - pods found not running in kube-system namespace
     debug:
       msg: 'pods not running: {{ pods.stdout_lines }}'
     when: pods.stdout_lines|length > 0
-
-  - name: Kubernetes health - all pods are running in kube-system namespace
-    debug:
-      msg: 'ALL PODS ARE RUNNING IN KUBE-SYSTEM'
-    when: pods.stdout_lines|length == 0
 
 #     k get pods -o jsonpath='{.items[?(@.status.containerStatuses[*].ready==false)]}'
