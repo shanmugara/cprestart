@@ -18,11 +18,9 @@
       msg: 'pods not running: {{ pods.stdout_lines }}'
     when: pods.stdout_lines|length > 0
 
-  - name: Kubernetes health - all pods running block
-    block:
-    - name: Kubernetes health - all pods are running in kube-system namespace
-      debug:
-        msg: 'ALL PODS ARE RUNNING IN KUBE-SYSTEM'
+  - name: Kubernetes health - all pods are running in kube-system namespace
+    debug:
+      msg: 'ALL PODS ARE RUNNING IN KUBE-SYSTEM'
     when: pods.stdout_lines|length == 0
 
 #     k get pods -o jsonpath='{.items[?(@.status.containerStatuses[*].ready==false)]}'
