@@ -40,7 +40,7 @@
       block:
       - name: Stop phase - waiting for pod {{ pod_name }} to stop
         shell:
-          cmd: sudo crictl ps --state running -p {{ pod_id.stdout_lines[0] }} --no-trunc
+          cmd: 'sudo crictl ps --state running -p {{ pod_id.stdout_lines[0] }} --no-trunc'
         register: results
         until: results.stdout.find(pod_id.stdout_lines[0][:13]) == -1
         retries: "{{ retry_count }}"
