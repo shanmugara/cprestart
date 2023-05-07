@@ -2,12 +2,12 @@
 - name: Stop phase - stop kubernetes api and manager pods block
   tags: stopcp
   block:
-    - name: Stop phase - reading manifest file {{ item }}
+    - name: Stop phase - reading manifest {{ item }}
       shell:
         cmd: "cat {{ item }}"
       register: manifest
 
-    - name: Stop phase - getting static_pod name from manifest file
+    - name: Stop phase - getting static_pod name from manifest
       set_fact:
         pod_name: "{{ manifest_yaml.metadata.name }}-{{ inventory_hostname }}"
       vars:
@@ -31,7 +31,7 @@
         changed_when: "container_id is not failed"
       when: cri == 'docker'
 
-    - name: Stop phase - removing pod {{ pod_name }} from static_pod path {{ item | dirname }}
+    - name: Stop phase - removing pod {{ pod_name }} from {{ item | dirname }}
       file:
         path: "{{ item }}"
         state: absent

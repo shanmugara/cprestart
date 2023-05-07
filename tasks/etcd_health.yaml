@@ -1,8 +1,8 @@
 ---
-- name: Restart phase - etcd health check block
+- name: Restart phase etcd - etcd health check block
   tags: etcdhealth
   block:
-  - name: Restart phase - checking etcd cluster endpoint health
+  - name: Restart phase etcd - checking etcd cluster endpoint health
     shell:
       cmd: "{{ etcdctl_sh }} endpoint health -w json"
     register: etcd_h_json
@@ -12,12 +12,12 @@
 
   when: (etcd_healthy is undefined) or (etcd_healthy == false)
   rescue:
-  - name: Restart phase - setting etcd_healthy fact false
+  - name: Restart phase etcd - setting etcd_healthy fact false
     set_fact:
       etcd_healthy: false
 
   always:
-  - name: Restart phase - etcd health check status
+  - name: Restart phase etcd - etcd health check status
     debug:
       msg: etcd health "{{ item }}"
     loop: "{{ etcd_h_json.stdout_lines[0] }}"

@@ -21,7 +21,7 @@
       path: '{{ tmp_base_dir }}'
       state: directory
 
-  - name: CRI - Create reference file for restore op
+  - name: CRI - Create reference file for restore task
     copy:
       content: "{{ cri }}"
       dest: "{{ cri_reference }}"
@@ -31,7 +31,7 @@
 - name: Getting CRI from reference file for restore op
   tags: getcri
   block:
-  - name: CRI - Read from cri reference file
+  - name: CRI - Reading from CRI reference file
     slurp:
       src: "{{ cri_reference }}"
     register: slurp_out

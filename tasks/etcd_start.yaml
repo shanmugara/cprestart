@@ -1,5 +1,5 @@
 ---
-- name: Restart phase - etcd restart block
+- name: Restart phase etcd - etcd restart block
   tags: startetcd
   block:
   - name: Restart phase etcd - restoring etcd manifest to {{ kube_manifests_dir }}
@@ -12,12 +12,12 @@
     set_fact:
       etcd_manifest: "{{ kube_manifests_dir }}/etcd.yaml"
 
-  - name: Restart phase etcd - reading manifest file {{ etcd_manifest }}
+  - name: Restart phase etcd - reading manifest {{ etcd_manifest }}
     shell:
       cmd: "cat {{ etcd_manifest }}"
     register: manifest
 
-  - name: Restart phase etcd - getting static_pod name from manifest file {{ etcd_manifest }}
+  - name: Restart phase etcd - getting static_pod name from manifest {{ etcd_manifest }}
     set_fact:
       etcd_pod_name: "{{ manifest_yaml.metadata.name }}-{{ inventory_hostname }}"
     vars:
@@ -25,7 +25,7 @@
 
   - name: Restart phase etcd - getting pod ready status for {{ etcd_pod_name }} block
     block:
-    - name: Restart phase - getting pod ready status for {{ etcd_pod_name }}
+    - name: Restart phase etcd - waiting for pod {{ etcd_pod_name }} to start
       shell:
         cmd: "sudo crictl pods --name ^{{ etcd_pod_name }}$ --state ready -q"
       register: result

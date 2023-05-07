@@ -2,16 +2,16 @@
 - name: Stop phase - stop etcd block
   tags: stopetcd
   block:
-  - name: Stop phase etcd - getting etcd manifest file path
+  - name: Stop phase etcd - getting etcd manifest path
     set_fact:
        etcd_manifest: "{{ kube_manifests_dir }}/etcd.yaml"
 
-  - name: Stop phase - reading manifest file {{ etcd_manifest }}
+  - name: Stop phase - reading manifest {{ etcd_manifest }}
     shell:
       cmd: "cat {{ etcd_manifest }}"
     register: manifest
 
-  - name: Stop phase etcd - getting static_pod name from manifest file {{ etcd_manifest }}
+  - name: Stop phase etcd - getting static_pod name from manifest {{ etcd_manifest }}
     set_fact:
       etcd_pod_name: "{{ manifest_yaml.metadata.name }}-{{ inventory_hostname }}"
     vars:
@@ -35,7 +35,7 @@
       changed_when: "container_id is not failed"
     when: cri == 'docker'
 
-  - name: Stop phase etcd - removing pod {{ etcd_pod_name }} from static_pod path {{ etcd_manifest | dirname }}
+  - name: Stop phase etcd - removing pod {{ etcd_pod_name }} from {{ etcd_manifest | dirname }}
     file:
       path: "{{ etcd_manifest }}"
       state: absent
