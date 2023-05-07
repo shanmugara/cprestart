@@ -23,9 +23,9 @@
     vars:
       manifest_yaml: "{{ manifest.stdout | from_yaml }}"
 
-  - name: Restart phase - getting the ready state for pod {{ pod_name }} block
+  - name: Restart phase - waiting for pod {{ pod_name }} to start block
     block:
-    - name: Restart phase - getting the ready state for pod {{ pod_name }}
+    - name: Restart phase - waiting for pod {{ pod_name }} to start
       shell:
         cmd: sudo crictl pods --name ^{{ pod_name }}$ --state ready -q
       register: result
