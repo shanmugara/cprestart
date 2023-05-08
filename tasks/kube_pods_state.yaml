@@ -18,5 +18,3 @@
     debug:
       msg: 'pods not running: {{ pods.stdout_lines }}'
     when: pods.stdout_lines|length > 0
-
-#     k get pods -o jsonpath='{.items[?(@.status.containerStatuses[*].ready==false)]}'
